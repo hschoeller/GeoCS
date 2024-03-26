@@ -6,3 +6,32 @@ build-backend = "hatchling.build"
 [project]
 name = "GeoCS"
 version = "0.1.0"
+description = "Coherent sets for Geophysical trajectories."
+readme = "README.md"
+license.file = "LICENSE"
+authors = [
+  { name = "Henry Schoeller", email = "h.schoeller@posteo.de" },
+]
+maintainers = [
+  { name = "Henry Schoeller", email = "h.schoeller@posteo.de" },
+]
+requires-python = ">=3.8"
+
+dependencies = [
+  "numpy",
+]
+
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Physics",
+  "Topic :: Scientific/Engineering :: Atmospheric Science",
+  "Topic :: Scientific/Engineering :: Oceanography",
+  "Topic :: Scientific/Engineering :: Mathematics",
+]
