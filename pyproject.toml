@@ -35,3 +35,7 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Oceanography",
   "Topic :: Scientific/Engineering :: Mathematics",
 ]
+
+[tool.hatch.version]
+scheme = "pep440"
+source = "tag"
