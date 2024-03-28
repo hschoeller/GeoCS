@@ -9,11 +9,12 @@ import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib as mpl
 import cartopy
+from cartopy.mpl.geoaxes import GeoAxes
 from typing import List, Tuple
 
 def plotTraj2D(trajs: np.ndarray, projection: cartopy.crs.Projection,
                extent: List[float], **kwargs) -> Tuple[mpl.figure.Figure,
-                                                  cartopy.mpl.geoaxes.GeoAxes]:
+                                                  GeoAxes]:
     """
     Plots a 2D trajectory map with specified projection and extent.
 
@@ -173,7 +174,8 @@ def plotTraj2D(trajs: np.ndarray, projection: cartopy.crs.Projection,
 
     ax.coastlines()
     ax.gridlines(linestyle='--', alpha=0.5)
-    ax.set_extent(extent, crs=cartopy.crs.PlateCarree())
+    if extent != [-180, 180, -90, 90]:
+        ax.set_extent(extent, crs=cartopy.crs.PlateCarree())
 
     # plot trajectories
     Lon = trajs['lon']
