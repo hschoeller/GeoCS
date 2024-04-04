@@ -6,8 +6,8 @@ Created on Wed Mar 27 11:10:26 2024
 @author: schoelleh96
 """
 
-import plotLib as pp
-import calcLib as cc
+from . import plotLib as pp
+from . import calcLib as cc
 from typing import Optional, List
 from datetime import datetime
 import numpy as np
@@ -15,6 +15,8 @@ import cartopy
 from abc import ABC, abstractmethod
 import os
 import scipy.sparse as sps
+
+# %%
 
 class Data(ABC):
     """
@@ -30,9 +32,9 @@ class Data(ABC):
     def __init__(self, dataPath: str, startDate: datetime):
         self._dataPath = dataPath
         self._startDate = startDate
-        _nTraj: Optional[int] = None
-        _nSteps: Optional[int] = None
-        _dt: Optional[datetime] = None
+        self._nTraj: Optional[int] = None
+        self._nSteps: Optional[int] = None
+        self._dt: Optional[datetime] = None
 
     def __str__(self) -> str:
         dateStr: str = self._startDate.strftime("%Y-%m-%d %H:%M:%s")
@@ -59,7 +61,7 @@ class Data(ABC):
         return self._dataPath
 
     @dataPath.setter
-    def setDataPath(self, value: str) -> None:
+    def dataPath(self, value: str) -> None:
         self._dataPath = value
 
     @property
@@ -67,7 +69,7 @@ class Data(ABC):
         return self._startDate
 
     @startDate.setter
-    def setStartDate(self, value: datetime) -> None:
+    def startDate(self, value: datetime) -> None:
         if not isinstance(value, datetime):
             raise TypeError("startDate must be a datetime object")
         self._startDate = value
@@ -83,6 +85,8 @@ class Data(ABC):
     @property
     def nSteps(self):
         return self._nSteps
+
+# %%
 
 class TrajData(Data):
     """
@@ -101,10 +105,10 @@ class TrajData(Data):
 
     def __init__(self, dataPath: str, startDate: datetime):
         super().__init__(dataPath, startDate)
-        _trajs: Optional[np.ndarray] = None
-        _k : Optional[float] = None
-        _extent: Optional[List] = [-180, 180, -90, 90]
-    _projection: Optional[cartopy.crs] = cartopy.crs.Mercator()
+        self._trajs: Optional[np.ndarray] = None
+        self._k : Optional[float] = None
+        self._extent: Optional[List] = [-180, 180, -90, 90]
+        self._projection: Optional[cartopy.crs] = cartopy.crs.Mercator()
 
     def __str__(self) -> str:
         parentStr = super().__str__()
@@ -120,9 +124,9 @@ class TrajData(Data):
 
         """
         self._trajs = np.load(self._dataPath)
-        self._getProperties()
+        self._get_properties()
 
-    def _getProperties(self) -> None:
+    def _get_properties(self) -> None:
         self._nTraj, self._nSteps = self._trajs.shape
         self._dt = self._trajs['time'][0,1] - self._trajs['time'][0,0]
 
@@ -142,7 +146,7 @@ class TrajData(Data):
         return self._extent
 
     @extent.setter
-    def setExtent(self, newExtent: List) -> None:
+    def extent(self, newExtent: List) -> None:
         self._extent = newExtent
 
     @property
@@ -150,7 +154,7 @@ class TrajData(Data):
         return self._projection
 
     @projection.setter
-    def setProjection(self, newProjection: cartopy.crs.Projection) -> None:
+    def projection(self, newProjection: cartopy.crs.Projection) -> None:
         self._projection = newProjection
 
     @property
@@ -158,9 +162,9 @@ class TrajData(Data):
         return self._trajs
 
     @trajs.setter
-    def setTrajs(self, newTrajs: np.ndarray) -> None:
+    def trajs(self, newTrajs: np.ndarray) -> None:
         self._trajs = newTrajs
-        self._getProperties()
+        self._get_properties()
 
     @property
     def k(self):
@@ -174,8 +178,8 @@ class TrajData(Data):
 
         """
         if self._k is None:
-            self._k = cc.calcK(self._trajs['U']/1000, self._trajs['V']/1000,
-                               self._trajs['OMEGA']/100)
+            self._k = cc.calc_k(self._trajs['U']/1000, self._trajs['V']/1000,
+                                self._trajs['OMEGA']/100)
         return self._k
 
     def plot(self, **kwargs):
@@ -193,10 +197,10 @@ class TrajData(Data):
         ax : matplotlib ax
 
         """
-        fig, ax = self.plot2D(**kwargs)
+        fig, ax = self.plot_2d(**kwargs)
         return fig, ax
 
-    def plot2D(self, **kwargs):
+    def plot_2d(self, **kwargs):
         """
         Simple 2D trajectory plot.
 
@@ -211,10 +215,12 @@ class TrajData(Data):
         ax : matplotlib ax
 
         """
-        fig, ax = pp.plotTraj2D(self.trajs, self._projection,
+        fig, ax = pp.plot_traj_2d(self.trajs, self._projection,
                                      self._extent,
                                      **kwargs)
         return fig, ax
+
+# %%
 
 class DistData(Data):
     """
@@ -228,7 +234,7 @@ class DistData(Data):
         _savePattern (str): The pattern used for saving distance matrix files,
             with datetime formatting symbols (e.g., "%Y%m%d_%H%M%S.npz").
         _mats (Dict[datetime, sps.csc_matrix]): A dictionary mapping each
-            timestep to its corresponding sparse distance matrix.
+            timestep to its corresponding sparse distance matrix triangle.
         _r (float): The cut-off radius for distance calculations.
         _matPaths (List[str]): The list of file paths for the matrices.
         _trajData (Optional[TrajData]): An optional TrajData object from which
@@ -238,7 +244,7 @@ class DistData(Data):
     def __init__(self, dataPath: str, r: float, k: float,
                  startDate: Optional[datetime] = None,
                  trajData: Optional[TrajData] = None,
-                 savePattern: Optional[str] = "%Y%m%d_%H%M%S.npz"):
+                 savePattern: Optional[str] = "%Y%m%d_%H%M.npz"):
         self._savePattern = savePattern
         self._mats = {}  # Initializing here to ensure it's unique per instance
         self._r = r
@@ -259,7 +265,7 @@ class DistData(Data):
             self._dt = trajData.dt
             self._trajData = trajData
             # Generate matPaths based on trajData timing
-            self._matPaths = [d.strftime(savePattern)
+            self._matPaths = [d.astype(datetime).strftime(savePattern)
                               for d in np.unique(trajData._trajs['time'])]
         else:
             raise ValueError("Either startDate or trajData must be provided.")
@@ -273,9 +279,9 @@ class DistData(Data):
         for mp in self._matPaths:
             fullPath = os.path.join(self._dataPath, mp)  # Ensure full path
             dateKey = datetime.strptime(mp, self._savePattern)
-            self._mats[dateKey] = self.loadMat(fullPath)
+            self._mats[dateKey] = self.load_mat(fullPath)
 
-    def loadMat(self, matPath: str) -> sps.csc_matrix:
+    def load_mat(self, matPath: str) -> sps.csc_matrix:
         return sps.load_npz(matPath)
 
     def save(self) -> None:
@@ -283,21 +289,21 @@ class DistData(Data):
         for mp in self._matPaths:
             dateKey = datetime.strptime(mp, self._savePattern)
             if dateKey in self._mats:
-                self.saveMat(self._mats[dateKey], mp)
+                self.save_mat(self._mats[dateKey], mp)
             else:
-                distMat = self.calcDist(dateKey)
-                self.saveMat(distMat, mp)
+                distMat = self.calc_dist(dateKey)
+                self.save_mat(distMat, mp)
 
-    def saveMat(self, mat: sps.csc_matrix, matPath: str) -> None:
+    def save_mat(self, mat: sps.csc_matrix, matPath: str) -> None:
         fullPath = os.path.join(self._dataPath, matPath)  # Ensure full path
         sps.save_npz(fullPath, mat)
 
-    def calcDist(self, dateKey: Optional[datetime] = None,
+    def calc_dist(self, dateKey: Optional[datetime] = None,
                  timestep: Optional[int] = None) -> sps.csc_matrix:
         if dateKey is not None:
-            timestep = np.datetime64(timestep)
+            dateKey = np.datetime64(dateKey)
             # Find the index where 'time' matches the timestep
-            index = np.where(self._trajData.trajs['time'] == dateKey)[0]
+            index = np.where(self._trajData.trajs['time'] == dateKey)[1]
             if index.size > 0:
                 column = self._trajData.trajs[:, index[0]]
             else:
@@ -307,6 +313,93 @@ class DistData(Data):
         else:
             raise ValueError("Either a datetime or an integer index " +
                              "must be provided.")
-        mat = cc.calcDist(column['lon'], column['lat'], column['p'],
+        mat = cc.calc_dist(column['lon'], column['lat'], column['p'],
                     self._r, self._k)
         return mat
+
+    @property
+    def savePattern(self) -> str:
+        return self._savePattern
+
+    @savePattern.setter
+    def savePattern(self, value: str) -> None:
+        self._savePattern = value
+
+    @property
+    def r(self) -> float:
+        return self._r
+
+    @r.setter
+    def r(self, value: float) -> None:
+        self._r = value
+
+    @property
+    def k(self) -> float:
+        return self._k
+
+    @k.setter
+    def k(self, value: float) -> None:
+        self._k = value
+
+    @property
+    def mats(self) -> dict:
+        return self._mats
+
+    @property
+    def matPaths(self) -> list:
+        return self._matPaths
+
+    @property
+    def trajData(self) -> Optional[TrajData]:
+        return self._trajData
+
+
+    def plot(self, **kwargs):
+        """
+        Default Distances plot. Invokes plotDistHist.
+
+        Parameters
+        ----------
+        **kwargs : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        fig : matplotlib figure
+        ax : matplotlib ax
+
+        """
+        fig, ax = self.plot_dist_hist(**kwargs)
+        return fig, ax
+
+    def plot_dist_hist(self, binCount: Optional[int] = 100, **kwargs):
+        """
+        Plots histogram of distances.
+
+        Parameters
+        ----------
+        **kwargs : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        fig : matplotlib figure
+        ax : matplotlib ax
+
+        """
+
+        binEdges = np.linspace(0, self._r, binCount)
+        histCounts = {}
+        for mp in self._matPaths:
+            dateKey = datetime.strptime(mp, self._savePattern)
+            if dateKey in self._mats:
+                distMat = self._mats[dateKey]
+            else:
+                distMat = self.calc_dist(dateKey)
+
+            counts, _ = np.histogram(distMat.data, bins=binEdges)
+            histCounts[dateKey] = counts
+
+        fig, ax = pp.plot_dist_hist(histCounts, binEdges, **kwargs)
+
+        return fig, ax

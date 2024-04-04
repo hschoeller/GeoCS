@@ -7,12 +7,13 @@ Created on Wed Mar 27 15:09:03 2024
 """
 import numpy as np
 from matplotlib import pyplot as plt
+import seaborn as sb
 import matplotlib as mpl
 import cartopy
 from cartopy.mpl.geoaxes import GeoAxes
 from typing import List, Tuple
 
-def plotTraj2D(trajs: np.ndarray, projection: cartopy.crs.Projection,
+def plot_traj_2d(trajs: np.ndarray, projection: cartopy.crs.Projection,
                extent: List[float], **kwargs) -> Tuple[mpl.figure.Figure,
                                                   GeoAxes]:
     """
@@ -73,7 +74,7 @@ def plotTraj2D(trajs: np.ndarray, projection: cartopy.crs.Projection,
 
         return segments
 
-    def colorline(x, y, z=None, cmap=None, norm=None, linewidth=3,
+    def color_line(x, y, z=None, cmap=None, norm=None, linewidth=3,
                   alpha=1.0, ax=None):
         '''
         Plot a colored line with coordinates x and y
@@ -173,7 +174,7 @@ def plotTraj2D(trajs: np.ndarray, projection: cartopy.crs.Projection,
                        subplot_kw={'projection': projection})
 
     ax.coastlines()
-    ax.gridlines(linestyle='--', alpha=0.5)
+    ax.gridlines(linestyle='--', alpha=0.5, zorder=-1)
     if extent != [-180, 180, -90, 90]:
         ax.set_extent(extent, crs=cartopy.crs.PlateCarree())
 
@@ -201,7 +202,7 @@ def plotTraj2D(trajs: np.ndarray, projection: cartopy.crs.Projection,
         for seg in subsegs:
             x,y = seg[0],seg[1]
 
-            cl = colorline(x, y, P[i], norm=norm,
+            cl = color_line(x, y, P[i], norm=norm,
                            linewidth=linewidth, cmap=cmap)
 
     ax.scatter(Lon[::every_n,points], Lat[::every_n,points],
@@ -216,4 +217,48 @@ def plotTraj2D(trajs: np.ndarray, projection: cartopy.crs.Projection,
     # cbar.ax.tick_params(labelsize=14)
     plt.tight_layout()
 
+    return fig, ax
+
+def plot_dist_hist(hist_counts: dict[str, list[int]], bin_edges: np.ndarray, **kwargs) -> Tuple[mpl.figure.Figure, mpl.axes._axes.Axes]:
+    """
+    Plots a heatmap of histogram counts over timesteps.
+
+    Args:
+        hist_counts (dict): A dictionary with timesteps as keys and
+        histogram counts as values.
+        bin_edges (np.ndarray): The edges of the bins used for the histograms.
+        **kwargs: Additional keyword arguments to customize the plot:
+            - cmap (str): Colormap for the heatmap. Default is "viridis".
+            - figsize (Tuple[int, int]): Figure size. Default is (10, 6).
+
+    Returns:
+        Tuple[matplotlib.figure.Figure, matplotlib.axes._axes.Axes]:
+            The figure and axes objects of the plot.
+    """
+    # Extracting **kwargs
+    cmap = kwargs.get('cmap', "viridis")
+    figsize = kwargs.get('figsize', (10, 6))
+
+    fig, ax = plt.subplots(1, 1, figsize=figsize)
+    # Sort the keys to ensure the order on the y-axis
+    sorted_keys = sorted(hist_counts.keys())
+
+    # Convert the dictionary values to a 2D array
+    hist_counts_array = np.array([hist_counts[key] for key in sorted_keys])
+    # Plotting the heatmap on the specified axes
+    sb.heatmap(hist_counts_array, cmap=cmap, ax=ax)
+
+    # Setting x-axis and y-axis tick positions and labels
+    ax.xaxis.set_major_locator(plt.MaxNLocator(integer=True))
+    ax.set_xticks(np.arange(len(bin_edges))[::10])
+    ax.set_xticklabels([f"{int(edge)}" for edge in bin_edges[::10]])
+
+    ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+    ax.set_yticks(np.arange(len(sorted_keys))[::10])
+    ax.set_yticklabels(sorted_keys[::10])
+
+    ax.set_xlabel('Distance')
+    ax.set_ylabel('Timestep')
+
+    plt.tight_layout()
     return fig, ax
