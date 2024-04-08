@@ -11,7 +11,49 @@ import seaborn as sb
 import matplotlib as mpl
 import cartopy
 from cartopy.mpl.geoaxes import GeoAxes
-from typing import List, Tuple
+from typing import List, Tuple, Dict, Optional, Callable
+from abc import ABC, abstractmethod
+from matplotlib.widgets import (Slider, CheckButtons, Button, RadioButtons,
+                                TextBox)
+from trimesh import Trimesh
+
+class PointCloudVisualizer(ABC):
+    """
+    Abstract class for visualizing a point cloud with interactive widgets.
+    """
+    def __init__(self, x: np.ndarray, y: np.ndarray, z: np.ndarray,
+                 initial_time_index: int = 0):
+        self.x, self.y, self.z = x, y, z
+        self.t_i = initial_time_index
+        self.fig, self.ax = self._setup_fig_axes()
+        self._init_widgets()
+        self.t_slider.on_changed(self._update_plot)
+
+    def _setup_fig_axes(self) -> plt.Figure:
+        """
+        Sets up the figure and axes for plotting.
+        """
+        fig, ax = plt.subplots(subplot_kw={'projection': '3d'},
+                               figsize=(14, 8))
+        return fig, ax
+
+    def _init_widgets(self):
+        """
+        Initializes interactive widgets for the plot.
+        """
+        t_slider_ax = self.fig.add_axes([0.05, 0.95, 0.15, 0.025])
+        self.t_slider = Slider(t_slider_ax, 'T', 0, self.x.shape[1]-1,
+                               valinit=self.t_i, valstep=1)
+
+    @abstractmethod
+    def _update_plot(self, val=None):
+        """
+        Abstract method to update the plot based on the current state of widgets.
+        """
+        pass
+
+
+# %% Traj functions
 
 def plot_traj_2d(trajs: np.ndarray, projection: cartopy.crs.Projection,
                extent: List[float], **kwargs) -> Tuple[mpl.figure.Figure,
@@ -219,7 +261,11 @@ def plot_traj_2d(trajs: np.ndarray, projection: cartopy.crs.Projection,
 
     return fig, ax
 
-def plot_dist_hist(hist_counts: dict[str, list[int]], bin_edges: np.ndarray, **kwargs) -> Tuple[mpl.figure.Figure, mpl.axes._axes.Axes]:
+# %% Dist functions
+
+def plot_dist_hist(hist_counts: dict[str, list[int]],
+                   bin_edges: np.ndarray,
+                   **kwargs) -> Tuple[mpl.figure.Figure, mpl.axes._axes.Axes]:
     """
     Plots a heatmap of histogram counts over timesteps.
 
@@ -262,3 +308,87 @@ def plot_dist_hist(hist_counts: dict[str, list[int]], bin_edges: np.ndarray, **k
 
     plt.tight_layout()
     return fig, ax
+
+# %% Bound Functions
+
+class BoundVisualizer(PointCloudVisualizer):
+    """
+    Visualizer for point clouds with boundary and hull
+    """
+    def __init__(self, x: np.ndarray, y: np.ndarray, z: np.ndarray,
+                 get_bound: Callable[[float, bool], Tuple[
+                                             Dict[np.datetime64, np.ndarray],
+                                             Dict[np.datetime64, Trimesh]]],
+                 convex: bool, initial_time_index: int = 0,
+                 alpha: Optional[float] = None):
+        self.convex = convex
+        self.alpha = alpha
+
+        super().__init__(x, y, z, initial_time_index)
+        self.get_bound = get_bound
+        self.is_bound, self.hulls = self.get_bound(convex, alpha)
+        self._update_plot()
+        self.alph_text.on_submit(self._recalculate)
+        self.meth_check.on_clicked(self._recalculate)
+        self.hull_check.on_clicked(self._update_plot)
+
+    def _init_widgets(self):
+        super()._init_widgets()
+
+        self.meth_ax = self.fig.add_axes([0.25, 0.9, 0.15, 0.05])
+
+        if self.convex:
+            init_met = 0
+        elif self.alpha is not None:
+            init_met = 1
+        else:
+            init_met = 2
+        self.meth_check = RadioButtons(self.meth_ax, ["Convex", "$\\alpha$",
+                                        "opt. $\\alpha$"], init_met)
+        self.meth_ax.set_title("Hull Method")
+
+        self.alph_ax = self.fig.add_axes([0.45, 0.9, 0.15, 0.05])
+        self.alph_text = TextBox(self.alph_ax, "$\\alpha$")
+        self.alph_text.set_val(self.alpha)
+        self.alph_ax.set_title("$\\alpha$")
+
+        self.hull_ax = self.fig.add_axes([0.65, 0.9, 0.15, 0.05])
+        self.hull_check = CheckButtons(self.hull_ax, ["Plot hull?"], [False])
+
+    def _update_plot(self, event=None):
+        """
+        Implements the plotting of the point cloud along with its boundaries
+        and optionally the hulls based on the widget states.
+        """
+        self.ax.clear()
+        t = int(self.t_slider.val)
+        date_key = sorted(self.is_bound.keys())[t]
+        self.ax.scatter(self.x[:, t], self.y[:, t], self.z[:, t],
+                        c=self.is_bound[date_key])
+        self.ax.invert_zaxis()
+        self.ax.set_xlabel("X")
+        self.ax.set_ylabel("Y")
+        self.ax.set_zlabel("Z")
+
+        if self.hull_check.get_status()[0]:
+            hull = self.hulls[date_key]
+            self.ax.plot_trisurf(hull.vertices[:, 0], hull.vertices[:, 1],
+                                 triangles=hull.faces,
+                                 Z=hull.vertices[:, 2], alpha=0.5)
+        plt.draw()
+
+    def _recalculate(self, event=None):
+
+        if self.meth_check.value_selected == "Convex":
+            self.convex = True
+            self.is_bound, self.hulls  = self.get_bound(self.convex, None)
+        elif self.meth_check.value_selected == "$\\alpha$":
+            self.convex = False
+            self.alpha = float(self.alph_text.text)
+            self.is_bound, self.hulls  = self.get_bound(self.convex, self.alpha)
+        else:
+            self.convex = False
+            self.is_bound, self.hulls  = self.get_bound(self.convex, None)
+        self._update_plot()
+
+
