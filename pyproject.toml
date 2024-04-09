@@ -19,6 +19,10 @@ requires-python = ">=3.8"
 
 dependencies = [
   "numpy",
+  "matplotlib",
+  "seaborn",
+  "scikit-learn",
+  "alphashape",
   "cartopy",
 ]
 
@@ -40,3 +44,12 @@ classifiers = [
 [tool.hatch.version]
 scheme = "pep440"
 source = "tag"
+
+[project.optional-dependencies]
+docs = [
+  "furo",
+  "myst_parser >=0.13",
+  "sphinx >=4.0",
+  "sphinx-copybutton",
+  "sphinx-autodoc-typehints",
+]
