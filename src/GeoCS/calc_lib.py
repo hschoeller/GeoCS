@@ -6,17 +6,21 @@ Created on Thu Mar 28 10:08:54 2024
 @author: schoelleh96
 """
 
+from typing import Optional, List, Tuple, Dict, Callable
+from warnings import warn, catch_warnings, simplefilter
+from datetime import datetime
 import numpy as np
-from sklearn.neighbors import BallTree
 import scipy.sparse as sps
+import scipy.linalg as spl
+from sklearn.neighbors import BallTree
+from sklearn.cluster import KMeans
 from alphashape import alphashape
-from typing import Optional, List, Tuple, Dict
-from warnings import warn
 from scipy.spatial import ConvexHull
 from trimesh.base import Trimesh
 
 
-def calc_k(u: np.ndarray, v: np.ndarray, w: np.ndarray) -> float:
+def calc_k(u: np.typing.NDArray[float], v: np.typing.NDArray[float],
+           w: np.typing.NDArray[float]) -> float:
     """
     Calculate the velocity-based scaling parameter.
 
@@ -39,8 +43,9 @@ def calc_k(u: np.ndarray, v: np.ndarray, w: np.ndarray) -> float:
     # Return the scaling parameter
     return u_h.mean() / np.abs(w).mean()
 
-def calc_dist(lon: np.ndarray, lat: np.ndarray, z: np.ndarray,
-              r: float, k: float):
+def calc_dist(lon: np.typing.NDArray[float],
+              lat: np.typing.NDArray[float], z: np.typing.NDArray[float],
+              r: float, k: float) -> sps.csr_matrix:
     """
     Calculate pointwise distances given positions on earth.
 
@@ -60,7 +65,7 @@ def calc_dist(lon: np.ndarray, lat: np.ndarray, z: np.ndarray,
 
     Returns
     -------
-    scipy.sparse.csc_matrix
+    scipy.sparse.csr_matrix
         lower triangle of point-wise distance matrix.
 
     """
@@ -91,14 +96,15 @@ def calc_dist(lon: np.ndarray, lat: np.ndarray, z: np.ndarray,
         y.extend(idx[i][valid])
         v.extend(dist[valid])
 
-    return sps.csc_matrix((np.asarray(v), (np.asarray(x), np.asarray(y))),
+    return sps.csr_matrix((np.asarray(v), (np.asarray(x), np.asarray(y))),
                           shape=(lon.shape[0],lon.shape[0]))
 
-def calc_bounds(x: np.ndarray, y: np.ndarray, z: np.ndarray,
-                timesteps: np.ndarray, convex: bool,
+def calc_bounds(x: np.typing.NDArray[float], y: np.typing.NDArray[float],
+                z: np.typing.NDArray[float],
+                timesteps: np.typing.NDArray[datetime], convex: bool,
                 alpha: Optional[float] = None) -> Tuple[
-                    Dict[np.datetime64, np.ndarray],
-                    Dict[np.datetime64, Trimesh]]:
+                    Dict[datetime, np.typing.NDArray[bool]],
+                    Dict[datetime, Trimesh]]:
     """
     If Convex=True, find Convex Hull, else calculate alpha shape for given
     alpha or estimate optimal alpha else.
@@ -219,3 +225,69 @@ def calc_bounds(x: np.ndarray, y: np.ndarray, z: np.ndarray,
         bounds[timestep], hulls[timestep] = bound, hull
 
     return bounds, hulls
+
+def calc_diff_map(
+    eps: float, is_bound: Dict[datetime, np.typing.NDArray[bool]],
+    N_v: int, n_traj: int, dates: np.typing.NDArray[datetime],
+    dist_mats: Optional[Dict[datetime, sps.csr_matrix]] = None,
+    calc_dist: Optional[Callable[[datetime], sps.csr_matrix]] = None
+) -> Tuple[np.typing.NDArray[float], np.typing.NDArray[float]]:
+    """
+    Calculates diffusion maps (eigenvectors of the averaged diffusion
+    transition matrix) along with its eigenvalues
+
+    Parameters
+    ----------
+    eps : float
+        diffusion bandwidth.
+    is_bound : Dict[datetime, np.typing.NDArray[bool]]
+        indicates boundary points at each timestep.
+    N_v : int
+        how many eigenvalues and -vectors to compute.
+    n_traj : int
+        number of trajectories.
+    dates : np.typing.NDArray[datetime]
+        The timesteps of the trajectories.
+    dist_mats : Optional[Dict[datetime, sps.csr_matrix]], optional
+        Dictonary mapping dates to distance matrices. The default is None.
+    calc_dist : Optional[Callable[[datetime], sps.csr_matrix]], optional
+        Function handle to a function returning distance matrices given a date.
+        The default is None.
+
+    Returns
+    -------
+    vals : np.typing.NDArray[float]
+        Eigenvalues.
+    vecs : np.typing.NDArray[float]
+        Eigenvectors (the diffusion maps).
+
+    """
+    Q = sps.csr_matrix((n_traj,n_traj))
+    for d in dates:
+        K = dist_mats[d] if dist_mats is not None else calc_dist(d)
+        K.data = np.exp(-K.data**2/eps)
+        K = K + sps.eye(n_traj, format='csr') + K.T
+        K = K.multiply(1/K.sum(axis=1))
+        K = K.multiply(sps.diags(1 / K.sum(axis=1).A1))
+        # apply BCs
+        is_bound_indices = is_bound[d].nonzero()[0]
+        with catch_warnings():
+            simplefilter("ignore")
+            K[is_bound_indices,:] = 0
+            K[:,is_bound_indices] = 0
+        K.eliminate_zeros()
+
+        Q = Q + K
+
+    try:
+        vals, vecs = sps.linalg.eigs(Q, k=N_v)
+    except:
+        print("Eigs (sparse) failed, using eig")
+        vals, vecs = spl.eig(Q.toarray())
+    vals = np.flip(np.sort(np.real(vals)))[:N_v]
+    return (vals, np.real(vecs))
+
+def kmeans(E_vecs: np.typing.NDArray[float], N_k: int) -> KMeans:
+    N_v = N_k-1
+    kcluster = KMeans(n_clusters=N_k, n_init='auto').fit(E_vecs[:,0:(N_v)])
+    return kcluster

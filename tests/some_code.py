@@ -1,28 +1,19 @@
-#!/usr/bin/env python3                                                                                  
-# -*- coding: utf-8 -*-                                                                                 
-"""                                                                                                     
-Created on Thu Apr  4 11:33:01 2024                                                                     
-                                                                                                        
-@author: schoelleh96                                                                                    
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-# This will move the console to the right working directory.                                            
-from os.path import  dirname, abspath
-from os import chdir
-chdir(dirname(abspath(__file__)))
+Created on Thu Apr  4 11:33:01 2024
 
-from GeoCS import Traj, Dist, Bound
+@author: schoelleh96
+"""
+# This will move the console to the right working directory.
+from os.path import dirname, abspath
+from os import chdir
+from GeoCS import Traj, Dist, Bound, DiffMap
 from datetime import datetime
 import cartopy
-import pytest
+chdir(dirname(abspath(__file__)))
 
-
-# %% Basic Pytest                                                                                       
-
-def test_type():
-    T = Traj(".", datetime(2016, 5, 2, 0))
-    assert isinstance(T, Traj)
-
-# %% Traj Test                                                                                          
+# %% Traj Test
 
 start_date = datetime(2016, 5, 2, 0)
 fPath = start_date.strftime("/net/scratch/schoelleh96/WP2/WP2.1/LAGRANTO/" +
@@ -46,17 +37,17 @@ T.projection = cartopy.crs.Stereographic(
      central_longitude=-120)
 
 f, ax = T.plot()
-f, ax = T.plot_2d(figsize=(7,5))
+f, ax = T.plot_2d(figsize=(7, 5))
 
-# %% Dist Test                                                                                          
+# %% Dist Test
 
-T.trajs = T.trajs[::10,:]
+T.trajs = T.trajs[::10, :]
 print(T)
 
 D = Dist(data_path=start_date.strftime("./dists/%Y%m%d_%H/"), r=1e5, k=15,
          traj_data=T)
 
-D.r=1e4
+D.r = 1e4
 
 D_mat = D.calc_dist(timestep=0)
 
@@ -71,7 +62,7 @@ D.mats
 D.plot()
 
 
-# %% Bound Test                                                                                         
+# %% Bound Test
 
 B = Bound(data_path=start_date.strftime("./bounds/%Y%m%d_%H/"), k=15,
           convex=True, traj_data=T)
@@ -79,7 +70,7 @@ B = Bound(data_path=start_date.strftime("./bounds/%Y%m%d_%H/"), k=15,
 B.save()
 
 B.convex = False
-B.alpha=0.001
+B.alpha = 0.001
 
 print(B)
 
@@ -88,4 +79,11 @@ B._dict_path
 B.save()
 
 B.plot()
+
+# %% DiffMap Test
+
+DM = DiffMap(data_path=start_date.strftime("./DiffMaps/%Y%m%d_%H"), eps=5e4,
+            bound_data=B, dist_data=D)
+
+vals, vecs = DM.calc_diff_map(5e4)
 

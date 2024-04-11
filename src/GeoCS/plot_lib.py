@@ -13,9 +13,9 @@ import cartopy
 from cartopy.mpl.geoaxes import GeoAxes
 from typing import List, Tuple, Dict, Optional, Callable
 from abc import ABC, abstractmethod
-from matplotlib.widgets import (Slider, CheckButtons, Button, RadioButtons,
-                                TextBox)
+from matplotlib.widgets import Slider, CheckButtons, RadioButtons, TextBox
 from trimesh import Trimesh
+from datetime import datetime
 
 class PointCloudVisualizer(ABC):
     """
@@ -317,8 +317,8 @@ class BoundVisualizer(PointCloudVisualizer):
     """
     def __init__(self, x: np.ndarray, y: np.ndarray, z: np.ndarray,
                  get_bound: Callable[[float, bool], Tuple[
-                                             Dict[np.datetime64, np.ndarray],
-                                             Dict[np.datetime64, Trimesh]]],
+                                             Dict[datetime, np.ndarray],
+                                             Dict[datetime, Trimesh]]],
                  convex: bool, initial_time_index: int = 0,
                  alpha: Optional[float] = None):
         self.convex = convex
@@ -391,4 +391,71 @@ class BoundVisualizer(PointCloudVisualizer):
             self.is_bound, self.hulls  = self.get_bound(self.convex, None)
         self._update_plot()
 
+# %% CS functions
+
+class CSVisualizer(PointCloudVisualizer):
+    """
+    Visualizer for point clouds with coloring according to coherent sets.
+    """
+    def __init__(self, x: np.ndarray, y: np.ndarray, z: np.ndarray,
+                 is_bound: Dict[datetime, np.ndarray], eps: float,
+                 N_cs: int,
+                 get_E: Callable[[float], Tuple[np.typing.NDArray[float],
+                                                np.typing.NDArray[float]]],
+                 get_clust: Callable[[int], np.typing.NDArray[int]],
+                 initial_time_index: int = 0):
+        self.N_cs = N_cs
+        self.eps = eps
+        super().__init__(x, y, z, initial_time_index)
+        self.get_E = get_E
+        self.get_clust = get_clust
+        self.E_vals, self.E_vecs = self.get_E(eps)
+        self.cluster_labels = self.get_clust(N_cs)
+        self._update_plot()
+        self.eps_text.on_submit(self._recalculate)
+        self.N_cs_text.on_submit(self._recalculate)
+        self.t0_check.on_clicked(self._update_plot)
+
+    def _init_widgets(self):
+        super()._init_widgets()
+
+        self.N_cs_ax = self.fig.add_axes([0.25, 0.9, 0.15, 0.05])
+        self.N_cs_text = TextBox(self.N_cs_ax, "$N_{cs}$")
+        self.N_cs_text.set_val(self.N_cs)
+        self.N_cs_ax.set_title("$N_{cs}$")
+
+        self.eps_ax = self.fig.add_axes([0.45, 0.9, 0.15, 0.05])
+        self.eps_text = TextBox(self.eps_ax, "$\\epsilon$")
+        self.eps_text.set_val(self.eps)
+        self.eps_ax.set_title("$\\epsilon$")
+
+        self.t0_ax = self.fig.add_axes([0.65, 0.9, 0.15, 0.05])
+        self.t0_check = CheckButtons(self.t0_ax, ["Plot $t_0$?"], [False])
+
+    def _update_plot(self, event=None):
+        """
+        Implements the plotting of the point cloud along with its coloring
+        according to coherent set clustering.
+        """
+        self.ax.clear()
+        t = int(self.t_slider.val)
+        self.ax.scatter(self.x[:, t], self.y[:, t], self.z[:, t],
+                        c=self.cluster_labels)
+        self.ax.invert_zaxis()
+        self.ax.set_xlabel("X")
+        self.ax.set_ylabel("Y")
+        self.ax.set_zlabel("Z")
+
+        if self.t0_check.get_status()[0]:
+            self.ax.scatter(self.x[:, 0], self.y[:, 0], self.z[:, 0],
+                            c=self.cluster_labels)
+        plt.draw()
+
+    def _recalculate(self, event=None):
+        self.N_cs = int(self.N_cs_text.text)
+        self.eps = float(self.eps_text.text)
+        self.E_vals, self.E_vecs = self.get_E(self.eps)
+        self.cluster_labels = self.get_clust(self.N_cs)
+
+        self._update_plot()
 
