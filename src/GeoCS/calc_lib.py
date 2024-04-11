@@ -17,6 +17,7 @@ from sklearn.cluster import KMeans
 from alphashape import alphashape
 from scipy.spatial import ConvexHull
 from trimesh.base import Trimesh
+import shapely as shp
 
 
 def calc_k(u: np.typing.NDArray[float], v: np.typing.NDArray[float],
@@ -42,6 +43,7 @@ def calc_k(u: np.typing.NDArray[float], v: np.typing.NDArray[float],
     u_h = np.sqrt(u**2 + v**2)
     # Return the scaling parameter
     return u_h.mean() / np.abs(w).mean()
+
 
 def calc_dist(lon: np.typing.NDArray[float],
               lat: np.typing.NDArray[float], z: np.typing.NDArray[float],
@@ -97,7 +99,8 @@ def calc_dist(lon: np.typing.NDArray[float],
         v.extend(dist[valid])
 
     return sps.csr_matrix((np.asarray(v), (np.asarray(x), np.asarray(y))),
-                          shape=(lon.shape[0],lon.shape[0]))
+                          shape=(lon.shape[0], lon.shape[0]))
+
 
 def calc_bounds(x: np.typing.NDArray[float], y: np.typing.NDArray[float],
                 z: np.typing.NDArray[float],
@@ -106,6 +109,8 @@ def calc_bounds(x: np.typing.NDArray[float], y: np.typing.NDArray[float],
                     Dict[datetime, np.typing.NDArray[bool]],
                     Dict[datetime, Trimesh]]:
     """
+    Calculate Boundary.
+
     If Convex=True, find Convex Hull, else calculate alpha shape for given
     alpha or estimate optimal alpha else.
 
@@ -132,11 +137,13 @@ def calc_bounds(x: np.typing.NDArray[float], y: np.typing.NDArray[float],
         2. hulls: Mapping from timesteps to the Trimesh object representing
             the hull.
     """
+
     def opt_alpha(alpha_0: float, points: List[Tuple[float, float, float]],
                   max_iter: int, max_no_change: int):
-        '''
-        Find the highes alpha shape parameter that leads to a hull
-        that contains all points
+        """
+        Find optimal alpha.
+
+        Highest alpha that leads to a hull that contains all points.
 
         Parameters
         ----------
@@ -154,45 +161,43 @@ def calc_bounds(x: np.typing.NDArray[float], y: np.typing.NDArray[float],
         best alpha : float
             the best alpha found.
 
-        '''
-
+        """
         best_alpha = alpha_0
-        i_best_alpha = 0  # Index at which the best alpha was found
         alpha = alpha_0  # Initialize alpha with the starting value
         no_improvement_streak = 0
 
         for i in range(max_iter):
-            ashp = alphashape(points.tolist(), alpha)
-            if not ashp.faces:  # Check if alphashape is degenerate
+            ashp = alphashape(points, alpha)
+            if (ashp.faces.shape[0] == 0 or isinstance(
+                    ashp, shp.geometry.polygon.Polygon)):
+                # Check if alphashape is degenerate
                 out_no_bound = float('inf')
             else:
-                bound_arr = np.array([point for point in ashp.exterior.coords]) if hasattr(ashp, 'exterior') else ashp.points
-                boundary = np.asarray([tuple(p) in bound_arr for p in points])
-                in_out = ashp.contains(points)  # Check if points are inside the shape
-                out_no_bound = (~in_out & ~boundary).sum()
-
+                # Expand dimensions of points and vertices for broadcasting
+                points_expanded = np.expand_dims(points, axis=1)
+                vertices_expanded = np.expand_dims(ashp.vertices, axis=0)
+                # Perform an element-wise comparison and then reduce
+                matches = np.all(points_expanded == vertices_expanded, axis=2)
+                is_boundary = np.any(matches, axis=1)
+                inside = ashp.contains(points)
+                out_no_bound = (~inside & ~is_boundary).sum()
+                # out_no_bound are the number of points that are neither
+                # inside nor on the boundary
             if out_no_bound > 0:
-                alpha *= np.sqrt(0.1)  # Decrease alpha if there are points outside
+                alpha *= np.sqrt(0.1)
+                no_improvement_streak += 1
             else:
                 if alpha > best_alpha:
                     best_alpha = alpha
-                    i_best_alpha = i
-                    no_improvement_streak = 0  # Reset no improvement streak
+                    no_improvement_streak = 0
                 else:
-                    no_improvement_streak += 1  # Increment no improvement streak
+                    no_improvement_streak += 1
+                alpha = best_alpha + best_alpha * np.sqrt(0.1)
 
             if no_improvement_streak > max_no_change:
                 break  # Exit if no improvement in alpha for a while
 
-            alpha = best_alpha + best_alpha * np.sqrt(0.1)  # Try a larger alpha
-
         return best_alpha
-    ###
-    def get_ind(x, z):
-        y = np.empty_like(x.flatten())
-        for i, xx in enumerate(x.flatten()):
-            y[i] = np.where(z == xx)[0]
-        return y.reshape(x.shape)
     ###
 
     bounds, hulls = {}, {}
@@ -213,7 +218,9 @@ def calc_bounds(x: np.typing.NDArray[float], y: np.typing.NDArray[float],
                                       axis=-1), axis=1)
                 hull = alpha_shape
             elif hasattr(alpha_shape, "boundary"):
-                warn("Alpha shape is a 2D polygon; points likely lie on a 2D surface. Returning Convex Hull.")
+                warn("Alpha shape is a 2D polygon; "
+                     "points likely lie on a 2D surface."
+                     " Returning Convex Hull.")
                 hull = ConvexHull(points)
                 hull = Trimesh(vertices=hull.points, faces=hull.simplices)
                 bound = np.isin(range(len(points)), hull.vertices)
@@ -226,6 +233,7 @@ def calc_bounds(x: np.typing.NDArray[float], y: np.typing.NDArray[float],
 
     return bounds, hulls
 
+
 def calc_diff_map(
     eps: float, is_bound: Dict[datetime, np.typing.NDArray[bool]],
     N_v: int, n_traj: int, dates: np.typing.NDArray[datetime],
@@ -233,8 +241,10 @@ def calc_diff_map(
     calc_dist: Optional[Callable[[datetime], sps.csr_matrix]] = None
 ) -> Tuple[np.typing.NDArray[float], np.typing.NDArray[float]]:
     """
-    Calculates diffusion maps (eigenvectors of the averaged diffusion
-    transition matrix) along with its eigenvalues
+    Calculate diffusion maps.
+
+    Diffusion maps: eigenvectors of the averaged diffusion transition matrix)
+                        along with its eigenvalues.
 
     Parameters
     ----------
@@ -262,7 +272,7 @@ def calc_diff_map(
         Eigenvectors (the diffusion maps).
 
     """
-    Q = sps.csr_matrix((n_traj,n_traj))
+    Q = sps.csr_matrix((n_traj, n_traj))
     for d in dates:
         K = dist_mats[d] if dist_mats is not None else calc_dist(d)
         K.data = np.exp(-K.data**2/eps)
@@ -273,21 +283,38 @@ def calc_diff_map(
         is_bound_indices = is_bound[d].nonzero()[0]
         with catch_warnings():
             simplefilter("ignore")
-            K[is_bound_indices,:] = 0
-            K[:,is_bound_indices] = 0
+            K[is_bound_indices, :] = 0
+            K[:, is_bound_indices] = 0
         K.eliminate_zeros()
 
         Q = Q + K
 
     try:
         vals, vecs = sps.linalg.eigs(Q, k=N_v)
-    except:
-        print("Eigs (sparse) failed, using eig")
+    except Exception as e:
+        print(f"Eigs (sparse) failed with error {e}, using eig")
         vals, vecs = spl.eig(Q.toarray())
     vals = np.flip(np.sort(np.real(vals)))[:N_v]
     return (vals, np.real(vecs))
 
+
 def kmeans(E_vecs: np.typing.NDArray[float], N_k: int) -> KMeans:
+    """
+    Cluster using kmeans algorithm from scikit-learn.
+
+    Parameters
+    ----------
+    E_vecs : np.typing.NDArray[float]
+        Coordinates which to cluster(eigenvectors).
+    N_k : int
+        Number of clusters.
+
+    Returns
+    -------
+    KMeans
+        kmeans object.
+
+    """
     N_v = N_k-1
-    kcluster = KMeans(n_clusters=N_k, n_init='auto').fit(E_vecs[:,0:(N_v)])
+    kcluster = KMeans(n_clusters=N_k, n_init='auto').fit(E_vecs[:, 0:(N_v)])
     return kcluster

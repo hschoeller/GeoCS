@@ -87,3 +87,4 @@ DM = DiffMap(data_path=start_date.strftime("./DiffMaps/%Y%m%d_%H"), eps=5e4,
 
 vals, vecs = DM.calc_diff_map(5e4)
 
+ll = DM.cluster_cs(5)
