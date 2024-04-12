@@ -83,7 +83,7 @@ B.plot()
 # %% DiffMap Test
 
 DM = DiffMap(data_path=start_date.strftime("./DiffMaps/%Y%m%d_%H"), eps=5e4,
-            bound_data=B, dist_data=D)
+             bound_data=B, dist_data=D)
 
 vals, vecs = DM.calc_diff_map(5e4)
 

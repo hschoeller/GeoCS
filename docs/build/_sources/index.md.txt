@@ -4,7 +4,12 @@
 :maxdepth: 2
 :hidden:
 :caption: API
-tutorials/installation.md
+installation.md
+tutorials/firstSteps.md
+tutorials/trajectories.md
+tutorials/distances.md
+tutorials/boundaries.md
+tutorials/diffMaps.md
 api/GeoCS
 
 ```

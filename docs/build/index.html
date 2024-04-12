@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Installation" href="tutorials/installation.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Installation" href="installation.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
         <title>GeoCS 0.1.0 documentation</title>
@@ -135,7 +135,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -157,7 +157,13 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/firstSteps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/trajectories.html">Trajectories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/distances.html">Distances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/boundaries.html">Boundaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/diffMaps.html">Diffusion Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/GeoCS.html">GeoCS package</a></li>
 </ul>
 
 </div>
@@ -186,7 +192,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -196,6 +202,58 @@
 <h1>GeoCS<a class="headerlink" href="#geocs" title="Link to this heading">#</a></h1>
 <div class="toctree-wrapper compound">
 </div>
+</section>
+<section id="id1">
+<h1>GeoCS<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>A package to calculate coherent sets from geospatial trajectory data.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>GeoCS
+</pre></div>
+</div>
+</section>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">#</a></h2>
+<p>The package follows object orientation and is centered around classes handling trajectories (Traj), point-wise distances (Dist), point-cloud boundaries (Bound), and diffusion maps (DiffMap). Each class can be calculated, saved, loaded and plotted.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">GeoCS</span> <span class="kn">import</span> <span class="n">Traj</span><span class="p">,</span> <span class="n">Dist</span><span class="p">,</span> <span class="n">Bound</span><span class="p">,</span> <span class="n">DiffMap</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">Traj</span><span class="p">(</span><span class="n">path_to_your_trajectories</span><span class="p">,</span> <span class="n">datetime</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">H</span><span class="p">))</span>
+<span class="n">T</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="mf">1e5</span>  <span class="c1"># cut-off radius</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c1"># scaling parameter</span>
+
+<span class="n">D</span> <span class="o">=</span> <span class="n">Dist</span><span class="p">(</span><span class="n">path_to_distances</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">traj_data</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+<span class="n">D</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="n">B</span> <span class="o">=</span> <span class="n">Bound</span><span class="p">(</span><span class="n">path_to_boundaries</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">convex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">traj_data</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+<span class="n">B</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="n">eps</span> <span class="o">=</span> <span class="mf">1e5</span>  <span class="c1"># diffusion bandwidth</span>
+<span class="n">DM</span> <span class="o">=</span> <span class="n">DiffMap</span><span class="p">(</span><span class="n">path_to_diffusion_maps</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">bound_data</span><span class="o">=</span><span class="n">B</span><span class="p">,</span> <span class="n">dist_data</span><span class="o">=</span><span class="n">D</span><span class="p">)</span>
+
+<span class="n">DM</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="n">DM</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h2>
+<p>Full documentation is available on readthedocs: <a class="reference external" href="https://geocs.readthedocs.io/">https://geocs.readthedocs.io/</a>.</p>
+<p>Project repository is at github: <a class="reference external" href="https://github.com/hschoeller/GeoCS">https://github.com/hschoeller/GeoCS</a></p>
+</section>
+<section id="license">
+<h2>License:<a class="headerlink" href="#license" title="Link to this heading">#</a></h2>
+<p>Licensed under the <a class="reference external" href="https://github.com/hschoeller/GeoCS/blob/main/LICENSE">MIT License</a>.</p>
+</section>
+<section id="credits">
+<h2>Credits:<a class="headerlink" href="#credits" title="Link to this heading">#</a></h2>
+<p>Development has been financed by the DFG funded <a class="reference external" href="https://www.mi.fu-berlin.de/en/sfb1114/index.html">CRC 1114</a>.</p>
+<p>Largely based on theory laid out in Banisch &amp; Koltai, 2017. Application and extension in the context of atmospheric flow will be detailed in future publication (Schoeller et. al, 2024).</p>
+<p>Banisch, Ralf and P ́eter Koltai (Mar. 2017). “Understanding the Geometry of Transport: Diffusion Maps for Lagrangian Trajectory Data Unravel Coherent Sets”. In: Chaos 27.3, p. 035804. issn: 1054-1500, 1089-7682. doi: 10.1063/1.4971788.</p>
+</section>
 <section id="indices-and-tables">
 <h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -211,7 +269,7 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="tutorials/installation.html">
+          <a class="next-page" href="installation.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
@@ -239,27 +297,8 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">GeoCS</a><ul>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

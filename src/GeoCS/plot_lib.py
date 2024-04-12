@@ -49,7 +49,7 @@ class PointCloudVisualizer(ABC):
         self._init_widgets()
         self.t_slider.on_changed(self._update_plot)
 
-    def _setup_fig_axes(self) -> plt.Figure:
+    def _setup_fig_axes(self) -> Tuple[mpl.figure.Figure, mpl.axes._axes.Axes]:
         """Set up the figure and axes for plotting."""
         fig, ax = plt.subplots(subplot_kw={'projection': '3d'},
                                figsize=(14, 8))
@@ -93,8 +93,7 @@ def plot_traj_2d(trajs: np.ndarray, projection: cartopy.crs.Projection,
         Additional keyword arguments:
         - cmap (matplotlib.colors.Colormap): The colormap for the line plot.
           Default is a custom cmap.
-        - norm (matplotlib.colors.Normalize): The normalization for the line
-          plot.
+        - norm (matplotlib.colors.Normalize): The normalization for the line plot.
         - figsize (tuple): Figure size as (width, height). Default is (3.5, 2).
         - every_n (int): Frequency of trajectories to plot. Default is 50.
         - linewidth (float): Width of the trajectory lines. Default is 0.4.
@@ -109,7 +108,6 @@ def plot_traj_2d(trajs: np.ndarray, projection: cartopy.crs.Projection,
     ax : cartopy.mpl.geoaxes.GeoAxes
         The cartopy GeoAxes object.
     """
-
     def make_segments(x, y):
         """
         Create list of line segments from x and y coordinates.
@@ -351,7 +349,7 @@ class BoundVisualizer(PointCloudVisualizer):
     """
 
     def __init__(self, x: np.ndarray, y: np.ndarray, z: np.ndarray,
-                 get_bound: Callable[[float, bool], Tuple[
+                 get_bound: Callable[[bool, float], Tuple[
                                              Dict[datetime, np.ndarray],
                                              Dict[datetime, Trimesh]]],
                  convex: bool, initial_time_index: int = 0,

@@ -58,7 +58,7 @@ class Data(ABC):
         pass
 
     @abstractmethod
-    def plot(self) -> None:
+    def plot(self) -> Tuple[mpl.figure.Figure, mpl.axes._axes.Axes]:
         """Plot data. Implementation required."""
         pass
 

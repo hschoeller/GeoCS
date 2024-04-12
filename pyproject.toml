@@ -41,6 +41,10 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Mathematics",
 ]
 
+[project.urls]
+Documentation = https://geocs.readthedocs.io/
+Repository = https://github.com/hschoeller/GeoCS
+
 [tool.hatch.version]
 scheme = "pep440"
 source = "tag"
