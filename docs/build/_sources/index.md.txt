@@ -6,7 +6,7 @@ tutorials/trajectories
 tutorials/distances
 tutorials/boundaries
 tutorials/diffMaps
-:caption: API
+api/modules
 api/GeoCS
 
 ```

@@ -1,0 +1,1781 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="prev" title="Diffusion Maps" href="../tutorials/diffMaps.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>GeoCS package - GeoCS 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">GeoCS 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">GeoCS 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/firstSteps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/trajectories.html">Trajectories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/distances.html">Distances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/boundaries.html">Boundaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/diffMaps.html">Diffusion Maps</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">GeoCS package</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="geocs-package">
+<h1>GeoCS package<a class="headerlink" href="#geocs-package" title="Link to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-GeoCS.calc_lib">
+<span id="geocs-calc-lib-module"></span><h2>GeoCS.calc_lib module<a class="headerlink" href="#module-GeoCS.calc_lib" title="Link to this heading">#</a></h2>
+<p>Created on Thu Mar 28 10:08:54 2024</p>
+<p>&#64;author: schoelleh96</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="GeoCS.calc_lib.calc_bounds">
+<span class="sig-prename descclassname"><span class="pre">GeoCS.calc_lib.</span></span><span class="sig-name descname"><span class="pre">calc_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timesteps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.calc_lib.calc_bounds" title="Link to this definition">#</a></dt>
+<dd><p>Calculate Boundary.</p>
+<p>If Convex=True, find Convex Hull, else calculate alpha shape for given
+alpha or estimate optimal alpha else.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – coordinate.</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – coordinate.</p></li>
+<li><p><strong>z</strong> (<em>np.ndarray</em>) – coordinate.</p></li>
+<li><p><strong>timesteps</strong> (<em>np.ndarray</em>) – timesteps belonging to axis 1 of the coords.</p></li>
+<li><p><strong>convex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – whether to find convex of concave bounding hull.</p></li>
+<li><p><strong>alpha</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – alpha parameter. The default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ol class="arabic simple">
+<li><dl class="simple">
+<dt>bounds: Mapping from timesteps to boundary flags</dt><dd><p>(True if inside or on boundary).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>hulls: Mapping from timesteps to the Trimesh object representing</dt><dd><p>the hull.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GeoCS.calc_lib.calc_diff_map">
+<span class="sig-prename descclassname"><span class="pre">GeoCS.calc_lib.</span></span><span class="sig-name descname"><span class="pre">calc_diff_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_traj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_mats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.calc_lib.calc_diff_map" title="Link to this definition">#</a></dt>
+<dd><p>Calculate diffusion maps.</p>
+<dl class="simple">
+<dt>Diffusion maps: eigenvectors of the averaged diffusion transition matrix)</dt><dd><p>along with its eigenvalues.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – diffusion bandwidth.</p></li>
+<li><p><strong>is_bound</strong> (<em>Dict</em><em>[</em><em>datetime</em><em>, </em><em>np.typing.NDArray</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>]</em>) – indicates boundary points at each timestep.</p></li>
+<li><p><strong>N_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – how many eigenvalues and -vectors to compute.</p></li>
+<li><p><strong>n_traj</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – number of trajectories.</p></li>
+<li><p><strong>dates</strong> (<em>np.typing.NDArray</em><em>[</em><em>datetime</em><em>]</em>) – The timesteps of the trajectories.</p></li>
+<li><p><strong>dist_mats</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>datetime</em><em>, </em><em>sps.csr_matrix</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Dictonary mapping dates to distance matrices. The default is None.</p></li>
+<li><p><strong>calc_dist</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>[</em><em>[</em><em>datetime</em><em>]</em><em>, </em><em>sps.csr_matrix</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Function handle to a function returning distance matrices given a date.
+The default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>vals</strong> (<em>np.typing.NDArray[float]</em>) – Eigenvalues.</p></li>
+<li><p><strong>vecs</strong> (<em>np.typing.NDArray[float]</em>) – Eigenvectors (the diffusion maps).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GeoCS.calc_lib.calc_dist">
+<span class="sig-prename descclassname"><span class="pre">GeoCS.calc_lib.</span></span><span class="sig-name descname"><span class="pre">calc_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.calc_lib.calc_dist" title="Link to this definition">#</a></dt>
+<dd><p>Calculate pointwise distances given positions on earth.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lon</strong> (<em>ndarray</em>) – longitudes.</p></li>
+<li><p><strong>lat</strong> (<em>ndarray</em>) – latitudes.</p></li>
+<li><p><strong>z</strong> (<em>ndarray</em>) – vertical coordinate.</p></li>
+<li><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – cut-off radius in km.</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – scaling parameter bringing vertical coordinate to horizontal coordinate
+value range.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>lower triangle of point-wise distance matrix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>scipy.sparse.csr_matrix</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GeoCS.calc_lib.calc_k">
+<span class="sig-prename descclassname"><span class="pre">GeoCS.calc_lib.</span></span><span class="sig-name descname"><span class="pre">calc_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.calc_lib.calc_k" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the velocity-based scaling parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>ndarray</em>) – Horizontal velocity in the x direction.</p></li>
+<li><p><strong>v</strong> (<em>ndarray</em>) – Horizontal velocity in the y direction.</p></li>
+<li><p><strong>w</strong> (<em>ndarray</em>) – Vertical velocity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Scaling parameter.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GeoCS.calc_lib.kmeans">
+<span class="sig-prename descclassname"><span class="pre">GeoCS.calc_lib.</span></span><span class="sig-name descname"><span class="pre">kmeans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">E_vecs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_k</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.calc_lib.kmeans" title="Link to this definition">#</a></dt>
+<dd><p>Cluster using kmeans algorithm from scikit-learn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>E_vecs</strong> (<em>np.typing.NDArray</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>]</em>) – Coordinates which to cluster(eigenvectors).</p></li>
+<li><p><strong>N_k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Number of clusters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>kmeans object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>KMeans</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-GeoCS.data_lib">
+<span id="geocs-data-lib-module"></span><h2>GeoCS.data_lib module<a class="headerlink" href="#module-GeoCS.data_lib" title="Link to this heading">#</a></h2>
+<p>Created on Wed Mar 27 11:10:26 2024</p>
+<p>&#64;author: schoelleh96</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GeoCS.data_lib.</span></span><span class="sig-name descname"><span class="pre">Bound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Bound" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../source/GeoCS.html#GeoCS.data_lib.Data" title="GeoCS.data_lib.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code></a></p>
+<p>Represents boundaries point clouds belonging to trajectory data.</p>
+<p>Uses either convex hulls or alpha shapes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The file path for storing and loading boundary data.</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – The scaling parameter used in distance calculations.</p></li>
+<li><p><strong>convex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Specifies whether to use convex hulls (True) or alpha shapes (False).</p></li>
+<li><p><strong>alpha</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>]</em><em>, </em><em>default=None</em>) – The alpha parameter for alpha shape calculation. If None and using
+alpha shapes, an optimal alpha will be estimated.</p></li>
+<li><p><strong>start_date</strong> (<em>Optional</em><em>[</em><em>datetime</em><em>]</em><em>, </em><em>default=None</em>) – The start date for the data analysis period.</p></li>
+<li><p><strong>traj_data</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="../source/GeoCS.html#GeoCS.data_lib.Traj" title="GeoCS.data_lib.Traj"><em>Traj</em></a><em>]</em><em>, </em><em>default=None</em>) – An instance of the Traj class containing trajectory data to be analyzed</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound._hulls">
+<span class="sig-name descname"><span class="pre">_hulls</span></span><a class="headerlink" href="#GeoCS.data_lib.Bound._hulls" title="Link to this definition">#</a></dt>
+<dd><p>Stores the hull (either convex or alpha shape) for each timestep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[datetime, Trimesh]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound._is_bound">
+<span class="sig-name descname"><span class="pre">_is_bound</span></span><a class="headerlink" href="#GeoCS.data_lib.Bound._is_bound" title="Link to this definition">#</a></dt>
+<dd><p>Indicates whether points are within the boundary for each timestep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[datetime, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound._projection">
+<span class="sig-name descname"><span class="pre">_projection</span></span><a class="headerlink" href="#GeoCS.data_lib.Bound._projection" title="Link to this definition">#</a></dt>
+<dd><p>The cartopy coordinate reference system used for data projection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[cartopy.crs]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.alpha">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alpha</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><a class="headerlink" href="#GeoCS.data_lib.Bound.alpha" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.calc_bounds">
+<span class="sig-name descname"><span class="pre">calc_bounds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Bound.calc_bounds" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Trimesh</span></code>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.calc_or_load">
+<span class="sig-name descname"><span class="pre">calc_or_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">convex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Bound.calc_or_load" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>convex</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – </p></li>
+<li><p><strong>alpha</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Trimesh</span></code>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.convex">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convex</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#GeoCS.data_lib.Bound.convex" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.hulls">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hulls</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><span class="pre">datetime</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Trimesh</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#GeoCS.data_lib.Bound.hulls" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.is_bound">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_bound</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><span class="pre">datetime</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#GeoCS.data_lib.Bound.is_bound" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.k">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></em><a class="headerlink" href="#GeoCS.data_lib.Bound.k" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Bound.load" title="Link to this definition">#</a></dt>
+<dd><p>Load data. Implementation required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Bound.plot" title="Link to this definition">#</a></dt>
+<dd><p>Plot default Boundary plot. Invokes plot_bound.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> (<em>TYPE</em>) – DESCRIPTION.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib figure</em>)</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib ax</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.plot_bound">
+<span class="sig-name descname"><span class="pre">plot_bound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Bound.plot_bound" title="Link to this definition">#</a></dt>
+<dd><p>Plot an interactive widget to demonstrate boundary detection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> (<em>TYPE</em>) – DESCRIPTION.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib figure</em>)</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib ax</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Bound.save" title="Link to this definition">#</a></dt>
+<dd><p>Save data. Implementation required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.traj_data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">traj_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../source/GeoCS.html#GeoCS.data_lib.Traj" title="GeoCS.data_lib.Traj"><span class="pre">Traj</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><a class="headerlink" href="#GeoCS.data_lib.Bound.traj_data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.x">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#GeoCS.data_lib.Bound.x" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Bound.y">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#GeoCS.data_lib.Bound.y" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GeoCS.data_lib.</span></span><span class="sig-name descname"><span class="pre">Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Data" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<p>Abstract base class for all kinds of data in this package.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data._data_path">
+<span class="sig-name descname"><span class="pre">_data_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Data._data_path" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path where the data is stored or to be stored.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data._start_date">
+<span class="sig-name descname"><span class="pre">_start_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Data._start_date" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The start date of the trajectories.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data._n_traj">
+<span class="sig-name descname"><span class="pre">_n_traj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Optional[int]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Data._n_traj" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of trajectories, initialized to None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data._n_steps">
+<span class="sig-name descname"><span class="pre">_n_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Optional[int]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Data._n_steps" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of time steps, initialized to None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data._dt">
+<span class="sig-name descname"><span class="pre">_dt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Optional[datetime]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Data._dt" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Time step size, initialized to None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – </p></li>
+<li><p><strong>start_date</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data.data_path">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#GeoCS.data_lib.Data.data_path" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data.dt">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dt</span></span><a class="headerlink" href="#GeoCS.data_lib.Data.dt" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data.load">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Data.load" title="Link to this definition">#</a></dt>
+<dd><p>Load data. Implementation required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data.n_steps">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">n_steps</span></span><a class="headerlink" href="#GeoCS.data_lib.Data.n_steps" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data.n_traj">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">n_traj</span></span><a class="headerlink" href="#GeoCS.data_lib.Data.n_traj" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data.plot">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Data.plot" title="Link to this definition">#</a></dt>
+<dd><p>Plot data. Implementation required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data.save">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Data.save" title="Link to this definition">#</a></dt>
+<dd><p>Save data. Implementation required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Data.start_date">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_date</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><span class="pre">datetime</span></a></em><a class="headerlink" href="#GeoCS.data_lib.Data.start_date" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="GeoCS.data_lib.DiffMap">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GeoCS.data_lib.</span></span><span class="sig-name descname"><span class="pre">DiffMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_cs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.DiffMap" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../source/GeoCS.html#GeoCS.data_lib.Data" title="GeoCS.data_lib.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code></a></p>
+<p>Diffusion maps for trajectory data to identify coherent sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Path where the computed diffusion map results are stored or will be
+stored.</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – The epsilon parameter controlling the diffusion process scale.</p></li>
+<li><p><strong>N_v</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>]</em><em>, </em><em>default=20</em>) – Number of eigenvectors (and corresponding eigenvalues) to compute.</p></li>
+<li><p><strong>N_cs</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>]</em><em>, </em><em>default=6</em>) – Number of coherent sets to identify from the diffusion map.</p></li>
+<li><p><strong>start_date</strong> (<em>Optional</em><em>[</em><em>datetime</em><em>]</em><em>, </em><em>default=None</em>) – Starting date for analyzing the trajectory data.</p></li>
+<li><p><strong>bound_data</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="../source/GeoCS.html#GeoCS.data_lib.Bound" title="GeoCS.data_lib.Bound"><em>Bound</em></a><em>]</em><em>, </em><em>default=None</em>) – An instance of the Bound class containing boundary data.</p></li>
+<li><p><strong>dist_data</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="../source/GeoCS.html#GeoCS.data_lib.Dist" title="GeoCS.data_lib.Dist"><em>Dist</em></a><em>]</em><em>, </em><em>default=None</em>) – An instance of the Dist class containing distance data between points.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.DiffMap._E_vals">
+<span class="sig-name descname"><span class="pre">_E_vals</span></span><a class="headerlink" href="#GeoCS.data_lib.DiffMap._E_vals" title="Link to this definition">#</a></dt>
+<dd><p>The eigenvalues computed from the diffusion map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.DiffMap._E_vecs">
+<span class="sig-name descname"><span class="pre">_E_vecs</span></span><a class="headerlink" href="#GeoCS.data_lib.DiffMap._E_vecs" title="Link to this definition">#</a></dt>
+<dd><p>The eigenvectors computed from the diffusion map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.DiffMap.calc_diff_map">
+<span class="sig-name descname"><span class="pre">calc_diff_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.DiffMap.calc_diff_map" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eps</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.DiffMap.calc_or_load">
+<span class="sig-name descname"><span class="pre">calc_or_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.DiffMap.calc_or_load" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eps</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.DiffMap.cluster_cs">
+<span class="sig-name descname"><span class="pre">cluster_cs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N_cs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.DiffMap.cluster_cs" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>N_cs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.DiffMap.file_path">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">file_path</span></span><a class="headerlink" href="#GeoCS.data_lib.DiffMap.file_path" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.DiffMap.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.DiffMap.load" title="Link to this definition">#</a></dt>
+<dd><p>Load data. Implementation required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.DiffMap.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.DiffMap.plot" title="Link to this definition">#</a></dt>
+<dd><p>Plot default coherent set plot. Invokes plot_cs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> (<em>TYPE</em>) – DESCRIPTION.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib figure</em>)</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib ax</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.DiffMap.plot_cs">
+<span class="sig-name descname"><span class="pre">plot_cs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.DiffMap.plot_cs" title="Link to this definition">#</a></dt>
+<dd><p>Plot interactive widget to analyze behaviour of coherent set detection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> (<em>TYPE</em>) – DESCRIPTION.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib figure</em>)</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib ax</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.DiffMap.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.DiffMap.save" title="Link to this definition">#</a></dt>
+<dd><p>Save data. Implementation required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GeoCS.data_lib.</span></span><span class="sig-name descname"><span class="pre">Dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%Y%m%d_%H%M.npz'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../source/GeoCS.html#GeoCS.data_lib.Data" title="GeoCS.data_lib.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code></a></p>
+<p>A class for handling pairwise distances of trajectories.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist._data_path">
+<span class="sig-name descname"><span class="pre">_data_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist._data_path" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path where the  data is stored or to be stored.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist._start_date">
+<span class="sig-name descname"><span class="pre">_start_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist._start_date" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The start date of the trajectories.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist._r">
+<span class="sig-name descname"><span class="pre">_r</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist._r" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The cut-off radius for distance calculations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist._k">
+<span class="sig-name descname"><span class="pre">_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist._k" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>vertical scaling parameter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist._save_pattern">
+<span class="sig-name descname"><span class="pre">_save_pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist._save_pattern" title="Link to this definition">#</a></dt>
+<dd><p>with datetime formatting symbols (e.g., “%Y%m%d_%H%M%S.npz”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The pattern used for saving distance matrix files,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist._mats">
+<span class="sig-name descname"><span class="pre">_mats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Dict[datetime,</span> <span class="pre">sps.csr_matrix]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist._mats" title="Link to this definition">#</a></dt>
+<dd><p>timestep to its corresponding sparse distance matrix triangle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary mapping each</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist._mat_paths">
+<span class="sig-name descname"><span class="pre">_mat_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">List[str]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist._mat_paths" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The list of file paths for the matrices.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist._traj_data">
+<span class="sig-name descname"><span class="pre">_traj_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Optional[traj_data]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist._traj_data" title="Link to this definition">#</a></dt>
+<dd><p>which pairwise distances can be calculated if not loading.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An optional traj_data object from</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – </p></li>
+<li><p><strong>r</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – </p></li>
+<li><p><strong>k</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – </p></li>
+<li><p><strong>start_date</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a>]</span>) – </p></li>
+<li><p><strong>traj_data</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="../source/GeoCS.html#GeoCS.data_lib.Traj" title="GeoCS.data_lib.Traj"><code class="xref py py-class docutils literal notranslate"><span class="pre">Traj</span></code></a>]</span>) – </p></li>
+<li><p><strong>save_pattern</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.calc_dist">
+<span class="sig-name descname"><span class="pre">calc_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist.calc_dist" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>date_key</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a>]</span>) – </p></li>
+<li><p><strong>timestep</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.calc_or_load">
+<span class="sig-name descname"><span class="pre">calc_or_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist.calc_or_load" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>date_key</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a>]</span>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.k">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></em><a class="headerlink" href="#GeoCS.data_lib.Dist.k" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist.load" title="Link to this definition">#</a></dt>
+<dd><p>Load all available distance matrices. Caution for large data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DESCRIPTION.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.load_mat">
+<span class="sig-name descname"><span class="pre">load_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist.load_mat" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>full_path</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.mat_paths">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mat_paths</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a></em><a class="headerlink" href="#GeoCS.data_lib.Dist.mat_paths" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.mats">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mats</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a></em><a class="headerlink" href="#GeoCS.data_lib.Dist.mats" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist.plot" title="Link to this definition">#</a></dt>
+<dd><p>Plot default Distances plot. Invokes plot_dist_hist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> (<em>TYPE</em>) – DESCRIPTION.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib figure</em>)</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib ax</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.plot_dist_hist">
+<span class="sig-name descname"><span class="pre">plot_dist_hist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist.plot_dist_hist" title="Link to this definition">#</a></dt>
+<dd><p>Plot histogram of distances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>**kwargs</strong> (<em>TYPE</em>) – DESCRIPTION.</p></li>
+<li><p><strong>bin_count</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib figure</em>)</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib ax</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.r">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></em><a class="headerlink" href="#GeoCS.data_lib.Dist.r" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist.save" title="Link to this definition">#</a></dt>
+<dd><p>Save distance matrix for all dates. Caution for large data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DESCRIPTION.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.save_mat">
+<span class="sig-name descname"><span class="pre">save_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Dist.save_mat" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mat</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code></span>) – </p></li>
+<li><p><strong>matPath</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.save_pattern">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save_pattern</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#GeoCS.data_lib.Dist.save_pattern" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Dist.traj_data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">traj_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../source/GeoCS.html#GeoCS.data_lib.Traj" title="GeoCS.data_lib.Traj"><span class="pre">Traj</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><a class="headerlink" href="#GeoCS.data_lib.Dist.traj_data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GeoCS.data_lib.</span></span><span class="sig-name descname"><span class="pre">Traj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Traj" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../source/GeoCS.html#GeoCS.data_lib.Data" title="GeoCS.data_lib.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code></a></p>
+<p>A class for handling trajectory data.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj._data_path">
+<span class="sig-name descname"><span class="pre">_data_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Traj._data_path" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The path where the data is stored or to be stored.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj._start_date">
+<span class="sig-name descname"><span class="pre">_start_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Traj._start_date" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The start date of the trajectories.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj._extent">
+<span class="sig-name descname"><span class="pre">_extent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Optional[List[float]]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Traj._extent" title="Link to this definition">#</a></dt>
+<dd><p>Defaulting to the entire globe ([-180, 180, -90, 90]).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The axes extent for plotting.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj._projection">
+<span class="sig-name descname"><span class="pre">_projection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cartopy.crs.Projection</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Traj._projection" title="Link to this definition">#</a></dt>
+<dd><p>Defaulting to Mercator projection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Map projection used for plotting.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj._trajs">
+<span class="sig-name descname"><span class="pre">_trajs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Optional[np.ndarray]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Traj._trajs" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The trajectory data as a NumPy array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj._k">
+<span class="sig-name descname"><span class="pre">_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Optional[float]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Traj._k" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Empirical scaling parameter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – </p></li>
+<li><p><strong>start_date</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj.extent">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extent</span></span><a class="headerlink" href="#GeoCS.data_lib.Traj.extent" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj.k">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#GeoCS.data_lib.Traj.k" title="Link to this definition">#</a></dt>
+<dd><p>Scaling parameter. Assumes U and V are in m/s and Omega is in P/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>In km/hPa.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Traj.load" title="Link to this definition">#</a></dt>
+<dd><p>Load trajectory data (npy) from file specified in data_path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Traj.plot" title="Link to this definition">#</a></dt>
+<dd><p>Plot default Trajectory plot. Invokes plot2D.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> (<em>TYPE</em>) – DESCRIPTION.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">GeoAxes</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib figure</em>)</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib ax</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj.plot_2d">
+<span class="sig-name descname"><span class="pre">plot_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Traj.plot_2d" title="Link to this definition">#</a></dt>
+<dd><p>Plot simple 2D trajectory plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> (<em>TYPE</em>) – DESCRIPTION.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">GeoAxes</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib figure</em>)</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib ax</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj.projection">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">projection</span></span><a class="headerlink" href="#GeoCS.data_lib.Traj.projection" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.data_lib.Traj.save" title="Link to this definition">#</a></dt>
+<dd><p>Save trajectory data (npy) to file specified in data_path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="GeoCS.data_lib.Traj.trajs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">trajs</span></span><a class="headerlink" href="#GeoCS.data_lib.Traj.trajs" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-GeoCS.plot_lib">
+<span id="geocs-plot-lib-module"></span><h2>GeoCS.plot_lib module<a class="headerlink" href="#module-GeoCS.plot_lib" title="Link to this heading">#</a></h2>
+<p>Created on Wed Mar 27 15:09:03 2024</p>
+<p>&#64;author: schoelleh96</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.BoundVisualizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GeoCS.plot_lib.</span></span><span class="sig-name descname"><span class="pre">BoundVisualizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_time_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.plot_lib.BoundVisualizer" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../source/GeoCS.html#GeoCS.plot_lib.PointCloudVisualizer" title="GeoCS.plot_lib.PointCloudVisualizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointCloudVisualizer</span></code></a></p>
+<p>A visualizer for displaying point clouds with their boundaries.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.BoundVisualizer.convex">
+<span class="sig-name descname"><span class="pre">convex</span></span><a class="headerlink" href="#GeoCS.plot_lib.BoundVisualizer.convex" title="Link to this definition">#</a></dt>
+<dd><p>Indicates whether to use a convex hull or an alpha shape.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.BoundVisualizer.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><a class="headerlink" href="#GeoCS.plot_lib.BoundVisualizer.alpha" title="Link to this definition">#</a></dt>
+<dd><p>The alpha parameter for the alpha shape. If None, an optimal alpha will
+be calculated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.BoundVisualizer.get_bound">
+<span class="sig-name descname"><span class="pre">get_bound</span></span><a class="headerlink" href="#GeoCS.plot_lib.BoundVisualizer.get_bound" title="Link to this definition">#</a></dt>
+<dd><blockquote>
+<div><p>Dict[datetime, Trimesh]]]</p>
+</div></blockquote>
+<p>A function that, given the alpha parameter and a boolean indicating
+whether to use a convex hull, returns the boundary flags and hulls for
+each timestep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable[[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a>], Tuple[Dict[datetime, np.ndarray],</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.BoundVisualizer.is_bound">
+<span class="sig-name descname"><span class="pre">is_bound</span></span><a class="headerlink" href="#GeoCS.plot_lib.BoundVisualizer.is_bound" title="Link to this definition">#</a></dt>
+<dd><p>A dictionary mapping timesteps to arrays indicating whether each point
+is within the boundary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[datetime, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.BoundVisualizer.hulls">
+<span class="sig-name descname"><span class="pre">hulls</span></span><a class="headerlink" href="#GeoCS.plot_lib.BoundVisualizer.hulls" title="Link to this definition">#</a></dt>
+<dd><p>A dictionary mapping timesteps to Trimesh objects representing the
+hulls.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[datetime, Trimesh]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – </p></li>
+<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – </p></li>
+<li><p><strong>z</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – </p></li>
+<li><p><strong>get_bound</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Trimesh</span></code>]]]</span>) – </p></li>
+<li><p><strong>convex</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – </p></li>
+<li><p><strong>initial_time_index</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – </p></li>
+<li><p><strong>alpha</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]</span>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.CSVisualizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GeoCS.plot_lib.</span></span><span class="sig-name descname"><span class="pre">CSVisualizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_cs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_E</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_clust</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_time_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.plot_lib.CSVisualizer" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../source/GeoCS.html#GeoCS.plot_lib.PointCloudVisualizer" title="GeoCS.plot_lib.PointCloudVisualizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointCloudVisualizer</span></code></a></p>
+<p>A visualizer for displaying coherent sets.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.CSVisualizer.N_cs">
+<span class="sig-name descname"><span class="pre">N_cs</span></span><a class="headerlink" href="#GeoCS.plot_lib.CSVisualizer.N_cs" title="Link to this definition">#</a></dt>
+<dd><p>The number of coherent sets (clusters) to identify.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.CSVisualizer.eps">
+<span class="sig-name descname"><span class="pre">eps</span></span><a class="headerlink" href="#GeoCS.plot_lib.CSVisualizer.eps" title="Link to this definition">#</a></dt>
+<dd><p>The epsilon parameter used in the diffusion map calculation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.CSVisualizer.get_E">
+<span class="sig-name descname"><span class="pre">get_E</span></span><a class="headerlink" href="#GeoCS.plot_lib.CSVisualizer.get_E" title="Link to this definition">#</a></dt>
+<dd><blockquote>
+<div><p>np.typing.NDArray[float]]]</p>
+</div></blockquote>
+<p>A function to compute or retrieve the eigenvalues and eigenvectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable[[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a>], Tuple[np.typing.NDArray[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a>],</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.CSVisualizer.get_clust">
+<span class="sig-name descname"><span class="pre">get_clust</span></span><a class="headerlink" href="#GeoCS.plot_lib.CSVisualizer.get_clust" title="Link to this definition">#</a></dt>
+<dd><p>A function to perform clustering on the eigenvectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable[[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a>], np.typing.NDArray[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.CSVisualizer.cluster_labels">
+<span class="sig-name descname"><span class="pre">cluster_labels</span></span><a class="headerlink" href="#GeoCS.plot_lib.CSVisualizer.cluster_labels" title="Link to this definition">#</a></dt>
+<dd><p>The labels of each point indicating its cluster assignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.typing.NDArray[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – </p></li>
+<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – </p></li>
+<li><p><strong>z</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – </p></li>
+<li><p><strong>is_bound</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span>) – </p></li>
+<li><p><strong>eps</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – </p></li>
+<li><p><strong>N_cs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – </p></li>
+<li><p><strong>get_E</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]]]]</span>) – </p></li>
+<li><p><strong>get_clust</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>], <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]]]</span>) – </p></li>
+<li><p><strong>initial_time_index</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.PointCloudVisualizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GeoCS.plot_lib.</span></span><span class="sig-name descname"><span class="pre">PointCloudVisualizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_time_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.plot_lib.PointCloudVisualizer" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<p>Abstract base class interactive point cloud visualizers.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.PointCloudVisualizer.x">
+<span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#GeoCS.plot_lib.PointCloudVisualizer.x" title="Link to this definition">#</a></dt>
+<dd><p>The x-coordinates of the points in the point cloud.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.PointCloudVisualizer.y">
+<span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#GeoCS.plot_lib.PointCloudVisualizer.y" title="Link to this definition">#</a></dt>
+<dd><p>The y-coordinates of the points in the point cloud.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.PointCloudVisualizer.z">
+<span class="sig-name descname"><span class="pre">z</span></span><a class="headerlink" href="#GeoCS.plot_lib.PointCloudVisualizer.z" title="Link to this definition">#</a></dt>
+<dd><p>The z-coordinates of the points in the point cloud.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.PointCloudVisualizer.t_i">
+<span class="sig-name descname"><span class="pre">t_i</span></span><a class="headerlink" href="#GeoCS.plot_lib.PointCloudVisualizer.t_i" title="Link to this definition">#</a></dt>
+<dd><p>The initial time index for the visualization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.PointCloudVisualizer.fig">
+<span class="sig-name descname"><span class="pre">fig</span></span><a class="headerlink" href="#GeoCS.plot_lib.PointCloudVisualizer.fig" title="Link to this definition">#</a></dt>
+<dd><p>The figure object for the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plt.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.PointCloudVisualizer.ax">
+<span class="sig-name descname"><span class="pre">ax</span></span><a class="headerlink" href="#GeoCS.plot_lib.PointCloudVisualizer.ax" title="Link to this definition">#</a></dt>
+<dd><p>The axes object for the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plt.Axes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.PointCloudVisualizer.t_slider">
+<span class="sig-name descname"><span class="pre">t_slider</span></span><a class="headerlink" href="#GeoCS.plot_lib.PointCloudVisualizer.t_slider" title="Link to this definition">#</a></dt>
+<dd><p>An interactive slider widget to control the time dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Slider</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – </p></li>
+<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – </p></li>
+<li><p><strong>z</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – </p></li>
+<li><p><strong>initial_time_index</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.plot_dist_hist">
+<span class="sig-prename descclassname"><span class="pre">GeoCS.plot_lib.</span></span><span class="sig-name descname"><span class="pre">plot_dist_hist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hist_counts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_edges</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.plot_lib.plot_dist_hist" title="Link to this definition">#</a></dt>
+<dd><p>Plot a heatmap of histogram counts over timesteps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hist_counts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – A dictionary with timesteps as keys and</p></li>
+<li><p><strong>values.</strong> (<em>histogram counts as</em>) – </p></li>
+<li><p><strong>bin_edges</strong> (<em>np.ndarray</em>) – The edges of the bins used for the histograms.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments to customize the plot:
+- cmap (str): Colormap for the heatmap. Default is “viridis”.
+- figsize (Tuple[int, int]): Figure size. Default is (10, 6).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Tuple[matplotlib.figure.Figure, matplotlib.axes._axes.Axes]:</dt><dd><p>The figure and axes objects of the plot.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GeoCS.plot_lib.plot_traj_2d">
+<span class="sig-prename descclassname"><span class="pre">GeoCS.plot_lib.</span></span><span class="sig-name descname"><span class="pre">plot_traj_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extent</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GeoCS.plot_lib.plot_traj_2d" title="Link to this definition">#</a></dt>
+<dd><p>Plot a 2D trajectory map with specified projection and extent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trajs</strong> (<em>numpy.ndarray</em>) – A structured array containing ‘lon’, ‘lat’, and ‘p’ fields.</p></li>
+<li><p><strong>projection</strong> (<em>cartopy.crs.Projection</em>) – The cartopy coordinate reference system to use for the plot.</p></li>
+<li><p><strong>extent</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>]</em>) – A list of floats specifying the extent of the plot as
+[longitude_min, longitude_max, latitude_min, latitude_max].</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>Additional keyword arguments:
+- cmap (matplotlib.colors.Colormap): The colormap for the line plot.</p>
+<blockquote>
+<div><p>Default is a custom cmap.</p>
+</div></blockquote>
+<ul>
+<li><p>norm (matplotlib.colors.Normalize): The normalization for the line plot.</p></li>
+<li><p>figsize (tuple): Figure size as (width, height). Default is (3.5, 2).</p></li>
+<li><p>every_n (int): Frequency of trajectories to plot. Default is 50.</p></li>
+<li><p>linewidth (float): Width of the trajectory lines. Default is 0.4.</p></li>
+<li><p>points (list): Indices of points to select for the scatter plot.
+Default is [0, -1] for the first and last points.</p></li>
+<li><p>s (float): Size of the scatter plot markers. Default is 0.4.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">GeoAxes</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib.figure.Figure</em>) – The matplotlib figure object.</p></li>
+<li><p><strong>ax</strong> (<em>cartopy.mpl.geoaxes.GeoAxes</em>) – The cartopy GeoAxes object.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-GeoCS">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-GeoCS" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="../tutorials/diffMaps.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Diffusion Maps</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Henry Schoeller
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">GeoCS package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-GeoCS.calc_lib">GeoCS.calc_lib module</a><ul>
+<li><a class="reference internal" href="#GeoCS.calc_lib.calc_bounds"><code class="docutils literal notranslate"><span class="pre">calc_bounds()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.calc_lib.calc_diff_map"><code class="docutils literal notranslate"><span class="pre">calc_diff_map()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.calc_lib.calc_dist"><code class="docutils literal notranslate"><span class="pre">calc_dist()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.calc_lib.calc_k"><code class="docutils literal notranslate"><span class="pre">calc_k()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.calc_lib.kmeans"><code class="docutils literal notranslate"><span class="pre">kmeans()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-GeoCS.data_lib">GeoCS.data_lib module</a><ul>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound"><code class="docutils literal notranslate"><span class="pre">Bound</span></code></a><ul>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound._hulls"><code class="docutils literal notranslate"><span class="pre">Bound._hulls</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound._is_bound"><code class="docutils literal notranslate"><span class="pre">Bound._is_bound</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound._projection"><code class="docutils literal notranslate"><span class="pre">Bound._projection</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.alpha"><code class="docutils literal notranslate"><span class="pre">Bound.alpha</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.calc_bounds"><code class="docutils literal notranslate"><span class="pre">Bound.calc_bounds()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.calc_or_load"><code class="docutils literal notranslate"><span class="pre">Bound.calc_or_load()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.convex"><code class="docutils literal notranslate"><span class="pre">Bound.convex</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.hulls"><code class="docutils literal notranslate"><span class="pre">Bound.hulls</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.is_bound"><code class="docutils literal notranslate"><span class="pre">Bound.is_bound</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.k"><code class="docutils literal notranslate"><span class="pre">Bound.k</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.load"><code class="docutils literal notranslate"><span class="pre">Bound.load()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.plot"><code class="docutils literal notranslate"><span class="pre">Bound.plot()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.plot_bound"><code class="docutils literal notranslate"><span class="pre">Bound.plot_bound()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.save"><code class="docutils literal notranslate"><span class="pre">Bound.save()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.traj_data"><code class="docutils literal notranslate"><span class="pre">Bound.traj_data</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.x"><code class="docutils literal notranslate"><span class="pre">Bound.x</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Bound.y"><code class="docutils literal notranslate"><span class="pre">Bound.y</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a><ul>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data._data_path"><code class="docutils literal notranslate"><span class="pre">Data._data_path</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data._start_date"><code class="docutils literal notranslate"><span class="pre">Data._start_date</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data._n_traj"><code class="docutils literal notranslate"><span class="pre">Data._n_traj</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data._n_steps"><code class="docutils literal notranslate"><span class="pre">Data._n_steps</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data._dt"><code class="docutils literal notranslate"><span class="pre">Data._dt</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data.data_path"><code class="docutils literal notranslate"><span class="pre">Data.data_path</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data.dt"><code class="docutils literal notranslate"><span class="pre">Data.dt</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data.load"><code class="docutils literal notranslate"><span class="pre">Data.load()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data.n_steps"><code class="docutils literal notranslate"><span class="pre">Data.n_steps</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data.n_traj"><code class="docutils literal notranslate"><span class="pre">Data.n_traj</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data.plot"><code class="docutils literal notranslate"><span class="pre">Data.plot()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data.save"><code class="docutils literal notranslate"><span class="pre">Data.save()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Data.start_date"><code class="docutils literal notranslate"><span class="pre">Data.start_date</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#GeoCS.data_lib.DiffMap"><code class="docutils literal notranslate"><span class="pre">DiffMap</span></code></a><ul>
+<li><a class="reference internal" href="#GeoCS.data_lib.DiffMap._E_vals"><code class="docutils literal notranslate"><span class="pre">DiffMap._E_vals</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.DiffMap._E_vecs"><code class="docutils literal notranslate"><span class="pre">DiffMap._E_vecs</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.DiffMap.calc_diff_map"><code class="docutils literal notranslate"><span class="pre">DiffMap.calc_diff_map()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.DiffMap.calc_or_load"><code class="docutils literal notranslate"><span class="pre">DiffMap.calc_or_load()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.DiffMap.cluster_cs"><code class="docutils literal notranslate"><span class="pre">DiffMap.cluster_cs()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.DiffMap.file_path"><code class="docutils literal notranslate"><span class="pre">DiffMap.file_path</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.DiffMap.load"><code class="docutils literal notranslate"><span class="pre">DiffMap.load()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.DiffMap.plot"><code class="docutils literal notranslate"><span class="pre">DiffMap.plot()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.DiffMap.plot_cs"><code class="docutils literal notranslate"><span class="pre">DiffMap.plot_cs()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.DiffMap.save"><code class="docutils literal notranslate"><span class="pre">DiffMap.save()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist"><code class="docutils literal notranslate"><span class="pre">Dist</span></code></a><ul>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist._data_path"><code class="docutils literal notranslate"><span class="pre">Dist._data_path</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist._start_date"><code class="docutils literal notranslate"><span class="pre">Dist._start_date</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist._r"><code class="docutils literal notranslate"><span class="pre">Dist._r</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist._k"><code class="docutils literal notranslate"><span class="pre">Dist._k</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist._save_pattern"><code class="docutils literal notranslate"><span class="pre">Dist._save_pattern</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist._mats"><code class="docutils literal notranslate"><span class="pre">Dist._mats</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist._mat_paths"><code class="docutils literal notranslate"><span class="pre">Dist._mat_paths</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist._traj_data"><code class="docutils literal notranslate"><span class="pre">Dist._traj_data</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.calc_dist"><code class="docutils literal notranslate"><span class="pre">Dist.calc_dist()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.calc_or_load"><code class="docutils literal notranslate"><span class="pre">Dist.calc_or_load()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.k"><code class="docutils literal notranslate"><span class="pre">Dist.k</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.load"><code class="docutils literal notranslate"><span class="pre">Dist.load()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.load_mat"><code class="docutils literal notranslate"><span class="pre">Dist.load_mat()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.mat_paths"><code class="docutils literal notranslate"><span class="pre">Dist.mat_paths</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.mats"><code class="docutils literal notranslate"><span class="pre">Dist.mats</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.plot"><code class="docutils literal notranslate"><span class="pre">Dist.plot()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.plot_dist_hist"><code class="docutils literal notranslate"><span class="pre">Dist.plot_dist_hist()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.r"><code class="docutils literal notranslate"><span class="pre">Dist.r</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.save"><code class="docutils literal notranslate"><span class="pre">Dist.save()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.save_mat"><code class="docutils literal notranslate"><span class="pre">Dist.save_mat()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.save_pattern"><code class="docutils literal notranslate"><span class="pre">Dist.save_pattern</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Dist.traj_data"><code class="docutils literal notranslate"><span class="pre">Dist.traj_data</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj"><code class="docutils literal notranslate"><span class="pre">Traj</span></code></a><ul>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj._data_path"><code class="docutils literal notranslate"><span class="pre">Traj._data_path</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj._start_date"><code class="docutils literal notranslate"><span class="pre">Traj._start_date</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj._extent"><code class="docutils literal notranslate"><span class="pre">Traj._extent</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj._projection"><code class="docutils literal notranslate"><span class="pre">Traj._projection</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj._trajs"><code class="docutils literal notranslate"><span class="pre">Traj._trajs</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj._k"><code class="docutils literal notranslate"><span class="pre">Traj._k</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj.extent"><code class="docutils literal notranslate"><span class="pre">Traj.extent</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj.k"><code class="docutils literal notranslate"><span class="pre">Traj.k</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj.load"><code class="docutils literal notranslate"><span class="pre">Traj.load()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj.plot"><code class="docutils literal notranslate"><span class="pre">Traj.plot()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj.plot_2d"><code class="docutils literal notranslate"><span class="pre">Traj.plot_2d()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj.projection"><code class="docutils literal notranslate"><span class="pre">Traj.projection</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj.save"><code class="docutils literal notranslate"><span class="pre">Traj.save()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.data_lib.Traj.trajs"><code class="docutils literal notranslate"><span class="pre">Traj.trajs</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-GeoCS.plot_lib">GeoCS.plot_lib module</a><ul>
+<li><a class="reference internal" href="#GeoCS.plot_lib.BoundVisualizer"><code class="docutils literal notranslate"><span class="pre">BoundVisualizer</span></code></a><ul>
+<li><a class="reference internal" href="#GeoCS.plot_lib.BoundVisualizer.convex"><code class="docutils literal notranslate"><span class="pre">BoundVisualizer.convex</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.BoundVisualizer.alpha"><code class="docutils literal notranslate"><span class="pre">BoundVisualizer.alpha</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.BoundVisualizer.get_bound"><code class="docutils literal notranslate"><span class="pre">BoundVisualizer.get_bound</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.BoundVisualizer.is_bound"><code class="docutils literal notranslate"><span class="pre">BoundVisualizer.is_bound</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.BoundVisualizer.hulls"><code class="docutils literal notranslate"><span class="pre">BoundVisualizer.hulls</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.CSVisualizer"><code class="docutils literal notranslate"><span class="pre">CSVisualizer</span></code></a><ul>
+<li><a class="reference internal" href="#GeoCS.plot_lib.CSVisualizer.N_cs"><code class="docutils literal notranslate"><span class="pre">CSVisualizer.N_cs</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.CSVisualizer.eps"><code class="docutils literal notranslate"><span class="pre">CSVisualizer.eps</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.CSVisualizer.get_E"><code class="docutils literal notranslate"><span class="pre">CSVisualizer.get_E</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.CSVisualizer.get_clust"><code class="docutils literal notranslate"><span class="pre">CSVisualizer.get_clust</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.CSVisualizer.cluster_labels"><code class="docutils literal notranslate"><span class="pre">CSVisualizer.cluster_labels</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.PointCloudVisualizer"><code class="docutils literal notranslate"><span class="pre">PointCloudVisualizer</span></code></a><ul>
+<li><a class="reference internal" href="#GeoCS.plot_lib.PointCloudVisualizer.x"><code class="docutils literal notranslate"><span class="pre">PointCloudVisualizer.x</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.PointCloudVisualizer.y"><code class="docutils literal notranslate"><span class="pre">PointCloudVisualizer.y</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.PointCloudVisualizer.z"><code class="docutils literal notranslate"><span class="pre">PointCloudVisualizer.z</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.PointCloudVisualizer.t_i"><code class="docutils literal notranslate"><span class="pre">PointCloudVisualizer.t_i</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.PointCloudVisualizer.fig"><code class="docutils literal notranslate"><span class="pre">PointCloudVisualizer.fig</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.PointCloudVisualizer.ax"><code class="docutils literal notranslate"><span class="pre">PointCloudVisualizer.ax</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.PointCloudVisualizer.t_slider"><code class="docutils literal notranslate"><span class="pre">PointCloudVisualizer.t_slider</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.plot_dist_hist"><code class="docutils literal notranslate"><span class="pre">plot_dist_hist()</span></code></a></li>
+<li><a class="reference internal" href="#GeoCS.plot_lib.plot_traj_2d"><code class="docutils literal notranslate"><span class="pre">plot_traj_2d()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-GeoCS">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    </body>
+</html>

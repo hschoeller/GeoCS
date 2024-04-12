@@ -1,16 +1,16 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="./">
+<html class="no-js" lang="en" data-content_root="../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="&lt;no title&gt;" href="tutorials/firstSteps.html" /><link rel="prev" title="GeoCS" href="index.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
-        <title>Installation - GeoCS 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
+        <title>Distances - GeoCS 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
     
     
 
@@ -124,7 +124,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">GeoCS 0.1.0 documentation</div></a>
+      <a href="../index.html"><div class="brand">GeoCS 0.1.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -144,23 +144,23 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
   <span class="sidebar-brand-text">GeoCS 0.1.0 documentation</span>
   
-</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">API</span></p>
-<ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/trajectories.html">Trajectories</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/boundaries.html">Boundaries</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/diffMaps.html">Diffusion Maps</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectories.html">Trajectories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="boundaries.html">Boundaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diffMaps.html">Diffusion Maps</a></li>
 </ul>
 
 </div>
@@ -195,9 +195,37 @@
           </label>
         </div>
         <article role="main">
-          <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
-<p>Can be done through pip, conda or mamba</p>
+          <section id="distances">
+<h1>Distances<a class="headerlink" href="#distances" title="Link to this heading">#</a></h1>
+<p>Distance objects can by initiated with an existing trajectory object or by loading saved distance data from earlier calculations. We will use the Traj object from earlier.</p>
+<p>Parameter r is a cut-off radius to limit computational cost of distance calculations and k is the scaling parameter (vertical distances will be scaled by k). Both can be changed later on, too.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">GeoCS</span> <span class="kn">import</span> <span class="n">Dist</span>
+
+
+<span class="n">D</span> <span class="o">=</span> <span class="n">Dist</span><span class="p">(</span><span class="n">data_path</span><span class="o">=</span><span class="n">start_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;./dists/%Y%m</span><span class="si">%d</span><span class="s2">_%H/&quot;</span><span class="p">),</span> <span class="n">r</span><span class="o">=</span><span class="mf">1e5</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">traj_data</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+
+<span class="n">D</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="mf">1e4</span>
+</pre></div>
+</div>
+<p>Since distance calculations scale quadratically (worst-case) with the number of points, you can either calculate/load the distance and save them as an attribute or only calculate/load them once required. The calc_or_load function calculates the point-wise distances only if there is no data saved for the respective timestep. You can call it with an integer (timestep) or with a datetime (date).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">D_mat</span> <span class="o">=</span> <span class="n">D</span><span class="o">.</span><span class="n">calc_or_load</span><span class="p">(</span><span class="n">timestep</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">D</span><span class="o">.</span><span class="n">save_mat</span><span class="p">(</span><span class="n">D_mat</span><span class="p">,</span> <span class="n">D</span><span class="o">.</span><span class="n">mat_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>To calculate/load all data at once, simply do</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">D</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="n">D</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="n">D</span><span class="o">.</span><span class="n">mats</span>
+</pre></div>
+</div>
+<p>The defaul plot option is a 2d histogram as a heatmap, showing the frequency of distances across the timesteps.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">D</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
 
         </article>
@@ -205,26 +233,8 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="tutorials/firstSteps.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">&lt;no title&gt;</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="index.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">Home</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -249,11 +259,11 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=01f34227"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
-    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="_static/copybutton.js?v=f281be69"></script>
+</div><script src="../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
     </body>
 </html>
