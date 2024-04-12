@@ -1,15 +1,12 @@
-# GeoCS
-
 ```{toctree}
 :maxdepth: 2
 :hidden:
+tutorials/firstSteps
+tutorials/trajectories
+tutorials/distances
+tutorials/boundaries
+tutorials/diffMaps
 :caption: API
-installation.md
-tutorials/firstSteps.md
-tutorials/trajectories.md
-tutorials/distances.md
-tutorials/boundaries.md
-tutorials/diffMaps.md
 api/GeoCS
 
 ```
