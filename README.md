@@ -61,6 +61,8 @@ Licensed under the [MIT License](https://github.com/hschoeller/GeoCS/blob/main/L
 
 Development has been financed by the DFG funded [CRC 1114](https://www.mi.fu-berlin.de/en/sfb1114/index.html).
 
-Largely based on theory laid out in Banisch & Koltai, 2017. Application and extension in the context of atmospheric flow will be detailed in future publication (Schoeller et. al, 2025).
+Largely based on theory laid out in Banisch & Koltai, 2017. Application and extension in the context of atmospheric flow will be detailed in future publication (Schoeller et. al, 2025). Preprint is available as:
+
+Schoeller, H., Chemnitz, R., Koltai, P., Engel, M., and Pfahl, S.: Assessing Lagrangian Coherence in Atmospheric Blocking, EGUsphere [preprint], https://doi.org/10.5194/egusphere-2024-2173, 2024. 
 
 Banisch, Ralf and P ́eter Koltai (Mar. 2017). “Understanding the Geometry of Transport: Diffusion Maps for Lagrangian Trajectory Data Unravel Coherent Sets”. In: Chaos 27.3, p. 035804. issn: 1054-1500, 1089-7682. doi: 10.1063/1.4971788.
