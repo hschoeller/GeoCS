@@ -50,7 +50,7 @@ Project repository is at github: [https://github.com/hschoeller/GeoCS](https://g
 
 If you use this package in your research, please cite it as:
 
-**Schoeller, Henry (2025). GeoCS (Version 1.0.1). Zenodo.**  
+**Schoeller, Henry (2025). GeoCS (Version 1.0.2). Zenodo.**  
 [https://doi.org/10.5281/zenodo.14899385](https://doi.org/10.5281/zenodo.14899385)
 
 ## License:
