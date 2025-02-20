@@ -4,5 +4,9 @@ authors:
   - family-names: Schoeller
     given-names: Henry
     orcid: https://orcid.org/0000-0001-5594-0700
+    affiliation: "Institute of Meteorology, Freie Universität Berlin, Berlin, Germany"
 title: "GeoCS"
-version: 0.1.0
+version: "1.0.0"
+date-released: "2025-02-20"
+doi: "10.5281/zenodo.14899386"
+license: "MIT"
