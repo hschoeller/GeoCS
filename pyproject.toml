@@ -8,7 +8,7 @@ name = "GeoCS"
 version = "1.0.2"
 description = "Coherent sets for Geophysical trajectories."
 readme = "README.md"
-license.file = "LICENSE"
+license = {file = "LICENSE"}
 authors = [
   { name = "Henry Schoeller", email = "h.schoeller@posteo.de" },
 ]
