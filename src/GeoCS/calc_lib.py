@@ -90,7 +90,7 @@ def calc_dist(lon: np.typing.NDArray[float],
 
         vdist = z[idx[i]] - z[i]
 
-        dist = np.sqrt(np.power(hdist[i], 2) + k * np.power(vdist, 2))
+        dist = np.sqrt(np.power(hdist[i], 2) + np.power(k * vdist, 2))
 
         # Now with the custom distance
         valid = np.where(dist < r)[0]
