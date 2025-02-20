@@ -5,10 +5,10 @@ build-backend = "hatchling.build"
 
 [project]
 name = "GeoCS"
-version = "1.0.2"
+version = "1.0.3"
 description = "Coherent sets for Geophysical trajectories."
 readme = "README.md"
-license = {file = "LICENSE"}
+license = {file = "LICENSE.txt"}
 authors = [
   { name = "Henry Schoeller", email = "h.schoeller@posteo.de" },
 ]
