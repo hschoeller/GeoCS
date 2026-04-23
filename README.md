@@ -1,6 +1,7 @@
 <!-- SPHINX-START -->
 
-[![DOI](https://zenodo.org/badge/777665015.svg)](https://doi.org/10.5281/zenodo.14899385)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14900691.svg)](https://doi.org/10.5281/zenodo.14900691)
+
 
 # GeoCS
 
